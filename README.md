@@ -12,7 +12,7 @@ It is entirely possible to use your own syntax for the configuration, as well as
 
 Let's assume the form is configured with a hardcoded list of elements:
 
-```ecmascript
+```JSX
 const formElements = [
   {
     name: 'foo',
@@ -30,7 +30,7 @@ const formElements = [
 
 As for the component library, we can use the `DefaultComponents`, which is a simple library of "reformed" `reactstrap` form components.
 
-```ecmascript
+```JSX
 class Example extends Component {
   _onSubmit = (model) => {
     // this gets called when the form is submitted
@@ -61,7 +61,7 @@ This is where the magic happens. Essentially what we can do is _modify_ the comp
 
 Let's assume for instance that we would like to wrap every form component in a `FormGroup` and add a label if is present in the element configuration. It would look something like this:
 
-```ecmascript
+```JSX
 const FormGroupDecorator = WrappedComponent => props => ( 
   <FormGroup>
     {props.element.label?<Label for={props.element.name}>{props.element.label}</Label>:null}
@@ -72,14 +72,14 @@ const FormGroupDecorator = WrappedComponent => props => (
 
 We can apply this to the entire component library using the `decorate` function:
 
-```ecmascript
+```JSX
 const decoratedComponents = decorate(FormGroupDecorator)(DefaultComponents)
 ```
 (And use `decoratedComponents` instead of DefaultComponents for the `components` attribute of the `FormComposer` of course.)
 
 To make use of the new `label` functionality, we can add them to the element configuration:
 
-```ecmascript
+```JSX
 const formElements = [
   {
     name: 'foo',
@@ -105,7 +105,7 @@ Let's say you want to add attributes to the underlying components, but only *aft
 
 This could be achieved by passing a helper function that is later used by a decorator as such:
 
-```ecmascript
+```JSX
 class App extends Component {
   constructor(props) {
     super(props)
@@ -148,7 +148,7 @@ class App extends Component {
 
 We'll still need a decorator that picks up this `getAttributes` function and uses it to add attributes to the wrapped component:
 
-```ecmascript
+```JSX
 const AttributesDecorator = WrappedComponent => props => {
   const { getAttributes } = props
   if (typeof getAttributes != 'function') {
@@ -160,13 +160,13 @@ const AttributesDecorator = WrappedComponent => props => {
 
 To use multiple decorators, you can use the `flowDecorators` function which applies all the decorators _in sequence_. (Keep the sequence in mind if you are expecting interaction between the decorators.)
 
-```ecmascript
+```JSX
 const decoratedComponents = flowDecorators([AttributesDecorator,FormGroupDecorator])(DefaultComponents)
 ```
 
 And of course, we'll need to extend our configuration to see the effect:
 
-```ecmascript
+```JSX
 const formElements = [
   {
     name: 'foo',
