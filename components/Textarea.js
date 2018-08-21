@@ -10,9 +10,29 @@ class Textarea extends Component {
     const { bindInput, element, attributes: propsAttributes } = this.props
     const { name, type, attributes: elementAttributes } = element
     return (
-      <Input name={name} type={type}  {...bindInput(name)} {...elementAttributes} {...propsAttributes} />      
+      <Input type={type}  {...bindInput(name)} {...elementAttributes} {...propsAttributes} />      
     )
   }
 }
   
+const config = [
+      {
+        name: "name",
+        type: "text",
+        label: "Field name",
+        validation: { required: true }
+      },
+      {
+        name: "label",
+        type: "textarea",
+        label: "Label"
+      },
+      {
+        name: "attributes.rows",
+        type: "text",
+        label: "Number of rows"
+      }
+]
+
 export default Textarea
+export { config }
