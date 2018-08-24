@@ -21,7 +21,13 @@ const config = [
         type: "text",
         label: "Field name",
         validation: { required: true },
-        layout: {col: {md:"12"}}
+        layout: {col: {md:"12"}},
+      },
+      {
+        name: "attributes.placeholder",
+        type: "text",
+        label: "Placeholder",
+        layout: {col: { md:"12" }}
       }
 ]
 

@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import assign from 'object-assign'
 import hoistNonReactStatics from 'hoist-non-react-statics'
+import { set, get } from 'lodash'
 
 const makeWrapper = (middleware) => (WrappedComponent) => {
   class FormWrapper extends React.Component {
@@ -24,11 +25,9 @@ const makeWrapper = (middleware) => (WrappedComponent) => {
           return model
         }
         getModel = ()=> getState("model")
-        getModelValue = (name)=> this.getModel()[name]
+        getModelValue = (name)=> get(this.getModel(),name)
         setModelValue = (name,value)=> {
-          return this.setModel(assign({}, this.getModel(), {
-            [name]: value,
-          }))
+          return this.setModel(set(this.getModel(),name,value))
         }
       }
       const getState = (name) => this.state[name]
