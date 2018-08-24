@@ -7,7 +7,7 @@ const config = [
   },
   {
     name: 'text',
-    path: './components/Textarea'
+    path: './components/Text'
   }
 ]
 

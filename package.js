@@ -13,7 +13,7 @@ Package.onUse(function(api) {
   Npm.depends({
     react: '16.4.2',
     'react-dom': '16.4.2',
-    'react-reformed': '1.1.2',
+    'react-reformed': '2.0.0',
     'reactstrap': '6.4.0',
     'lodash' : '4.17.10'
   });

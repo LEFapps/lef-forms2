@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import reformed from 'react-reformed'
 import { Input } from 'reactstrap'
 
-class Textarea extends Component {
+class TextComponent extends Component {
   get type() {
-    return "textarea"
+    return "text"
   }
   render() {
     const { bindInput, element, attributes: propsAttributes } = this.props
@@ -21,18 +21,9 @@ const config = [
         type: "text",
         label: "Field name",
         validation: { required: true },
-        attributes: {
-          size: "15"
-        },
         layout: {col: {md:"12"}}
-      },
-      {
-        name: "attributes.rows",
-        type: "text",
-        label: "Number of rows",
-        layout: {col: {md:"4"}}
       }
 ]
 
-export default Textarea
+export default TextComponent
 export { config }

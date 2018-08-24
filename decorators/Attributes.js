@@ -8,4 +8,4 @@ const AttributesDecorator = WrappedComponent => props => {
   return <WrappedComponent {...props} attributes={getAttributes(props.element)} />
 }
 
-export { AttributesDecorator }
+export default AttributesDecorator

@@ -12,10 +12,10 @@ class FormComposer extends Component {
     this.props.onSubmit(this.props.model)
   }
   renderElements(props) {
-    const { elements,components, ...additionalProps } = props
+    const { elements,library, ...additionalProps } = props
     return map(elements, element => {
-      if (components.hasOwnProperty(element.type)) {
-        let Component = components[element.type];
+      if (library.hasOwnProperty(element.type)) {
+        let Component = library[element.type];
         return <Component key={element.name} element={element} {...additionalProps} />
       } else {
         console.log(`Unknown element type: ${element.type}`)
@@ -24,8 +24,9 @@ class FormComposer extends Component {
     })
   }
   render() {
+    const { formAttributes } = this.props
     return (
-      <Form onSubmit={this._onSubmit}>
+      <Form onSubmit={this._onSubmit} {...formAttributes}>
         {this.renderElements(this.props)}
         {this.props.children}
       </Form>
@@ -35,4 +36,4 @@ class FormComposer extends Component {
 
 const ReformedFormComposer = reformed()(FormComposer)
 
-export { ReformedFormComposer as FormComposer }
+export { FormComposer, ReformedFormComposer }

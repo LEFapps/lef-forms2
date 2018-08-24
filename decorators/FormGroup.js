@@ -1,5 +1,6 @@
 import React from 'react'
 import { FormGroup, Label } from 'reactstrap'
+import { map,union } from 'lodash'
 
 const FormGroupDecorator = WrappedComponent => props => ( 
   <FormGroup>
@@ -8,4 +9,14 @@ const FormGroupDecorator = WrappedComponent => props => (
   </FormGroup>
 )
 
-export { FormGroupDecorator }
+const config = [
+  {
+    name: "label",
+    type: "textarea",
+    label: "Field label or introduction",
+    layout: {col: {md:"12"}}
+  }
+]
+
+export default FormGroupDecorator
+export { config }
