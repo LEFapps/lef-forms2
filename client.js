@@ -1,6 +1,7 @@
 import { FormComposer } from './FormComposer'
 import Textarea from './components/Textarea'
 import TextInput from './components/Text'
+import Checkbox from './components/Checkbox'
 import Components, { ComponentConfiguration }  from './Components'
 import Decorators, { DecoratorConfiguration } from './Decorators'
 import { 
@@ -22,6 +23,7 @@ export {
   FormComposer, 
   TextArea,
   TextInput,
+  Checkbox,
   Components as DefaultComponents, 
   ComponentConfiguration as DefaultComponentConfiguration,
   Decorators as DefaultDecorators,

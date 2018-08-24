@@ -8,7 +8,11 @@ const config = [
   {
     name: 'text',
     path: './components/Text'
-  }
+  },
+  {
+    name: 'checkbox',
+    path: './components/Checkbox'
+  },
 ]
 
 let components = {}
