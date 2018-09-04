@@ -1,4 +1,4 @@
-import { FormComposer } from './FormComposer'
+import { FormComposer, ReformedFormComposer } from './FormComposer'
 import Textarea from './components/Textarea'
 import TextInput from './components/Text'
 import Checkbox from './components/Checkbox'
@@ -9,14 +9,13 @@ import {
   flowDecorators,
   flowDecoratorConfigFirst,
   flowDecoratorConfigLast,
-  flowDecoratorConfig 
+  flowDecoratorConfig
 } from './helpers'
 import FormGroupDecorator from './decorators/FormGroup'
 import AttributesDecorator from './decorators/Attributes'
 import LayoutDecorator from './decorators/Layout'
 import { ElementEditor, FormEditor } from './FormEditor'
 import { EasyForm } from './EasyForm'
-
 
 // console.log(ComponentConfiguration)
 
