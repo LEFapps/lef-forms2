@@ -20,6 +20,9 @@ const config = [
         name: "name",
         type: "text",
         label: "Field name",
+        attributes: {
+          placeholder: "Technical name for field"
+        },
         validation: { required: true },
         layout: {col: {md:"12"}},
       },

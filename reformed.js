@@ -4,6 +4,22 @@ import assign from 'object-assign'
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import { set, get } from 'lodash'
 
+class ModelHandlerWrapper {
+  constructor({getState,setState}) {
+    this.getState = getState
+    this.setState = setState
+  }
+  setModel = (model) => { 
+    this.setState({model})
+    return model
+  }
+  getModel = ()=> this.getState("model")
+  getModelValue = (name)=> get(this.getModel(),name)
+  setModelValue = (name,value)=> {
+    return this.setModel(set(this.getModel(),name,value))
+  }
+}
+
 const makeWrapper = (middleware) => (WrappedComponent) => {
   class FormWrapper extends React.Component {
     static propTypes = {
@@ -15,71 +31,64 @@ const makeWrapper = (middleware) => (WrappedComponent) => {
       this.state = {
         model: props.initialModel || {},
       }
-      class ModelHandlerWrapper {
-        constructor({getState,setState}) {
-          this.getState = getState
-          this.setState = setState
+    }
+
+    makeHelpers = (modelHandler) => {
+      bindToChangeEvent = (e) => {
+        const { name, type, value } = e.target
+        if (type === 'checkbox') {
+          const oldCheckboxValue = modelHandler.getModelValue(name) || []
+          const newCheckboxValue = e.target.checked
+            ? oldCheckboxValue.concat(value)
+            : oldCheckboxValue.filter(v => v !== value)
+
+          modelHandler.setModelValue(name, newCheckboxValue)
+        } else {
+          modelHandler.setModelValue(name, value)
         }
-        setModel = (model) => { 
-          this.setState({model})
-          return model
+      }
+      helpers = {
+        setModel: (model) => modelHandler.setModel(model)
+        ,
+        setProperty: (prop, value) => modelHandler.setModelValue(prop,value)
+        ,
+        bindToChangeEvent: (e) => {
+          const { name, type, value } = e.target
+
+          if (type === 'checkbox') {
+            const oldCheckboxValue = modelHandler.getModelValue(name) || []
+            const newCheckboxValue = e.target.checked
+              ? oldCheckboxValue.concat(value)
+              : oldCheckboxValue.filter(v => v !== value)
+
+            modelHandler.setModelValue(name, newCheckboxValue)
+          } else {
+            modelHandler.setModelValue(name, value)
+          }
         }
-        getModel = ()=> getState("model")
-        getModelValue = (name)=> get(this.getModel(),name)
-        setModelValue = (name,value)=> {
-          return this.setModel(set(this.getModel(),name,value))
+        ,
+        bindInput: (name) => {
+          return {
+            name,
+            value: modelHandler.getModelValue(name) || '',
+            onChange: bindToChangeEvent,
+          }
         }
       }
-      const getState = (name) => this.state[name]
-      this.modelHandler = new ModelHandlerWrapper({getState: getState, setState: this.setState.bind(this)})
-      if (typeof middleware === 'function') {
-        this.modelHandler = middleware(this.modelHandler)
-      }
-    }
-
-    setModel = (model) => {
-      return this.modelHandler.setModel(model)
-    }
-
-    setProperty = (prop, value) => {
-      return this.modelHandler.setModelValue(prop,value)
-    }
-
-    // This, of course, does not handle all possible inputs. In such cases,
-    // you should just use `setProperty` or `setModel`. Or, better yet,
-    // extend `reformed` to supply the bindings that match your needs.
-    bindToChangeEvent = (e) => {
-      const { name, type, value } = e.target
-
-      if (type === 'checkbox') {
-        const oldCheckboxValue = this.modelHandler.getModelValue(name) || []
-        const newCheckboxValue = e.target.checked
-          ? oldCheckboxValue.concat(value)
-          : oldCheckboxValue.filter(v => v !== value)
-
-        this.setProperty(name, newCheckboxValue)
-      } else {
-        this.setProperty(name, value)
-      }
-    }
-
-    bindInput = (name) => {
-      return {
-        name,
-        value: this.modelHandler.getModelValue(name) || '',
-        onChange: this.bindToChangeEvent,
-      }
+      return helpers
     }
 
     render () {
+      const getState = (name) => this.state[name]
+      let modelHandler = new ModelHandlerWrapper({getState: getState, setState: this.setState.bind(this)})
+      if (typeof middleware === 'function') {
+        modelHandler = middleware(modelHandler)
+      }
       let nextProps = assign({}, this.props, {
-        model: this.modelHandler.getModel(),
-        setProperty: this.setProperty,
-        setModel: this.setModel,
-        bindInput: this.bindInput,
-        bindToChangeEvent: this.bindToChangeEvent
-      })
-
+        model: modelHandler.getModel()
+      },
+        this.makeHelpers(modelHandler)
+      )
       return React.createElement(WrappedComponent, nextProps)
     }
   }

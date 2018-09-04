@@ -1,31 +1,31 @@
+import { applyDecorators } from './helpers'
+import { map, difference } from 'lodash'
 
-const config = [
-  {
-    name: 'formgroup',
-    path: './decorators/FormGroup'
-  },
-  {
-    name: 'attributes',
-    path: './decorators/Attributes'
-  },
-  {
-    name: 'layout',
-    path: "./decorators/Layout"
-  },
-]
+/* Note: the sequence here determines the sequence 
+ * in which they are applied in EasyForm!
+ */
+const library = new Map([
+  [ 'attributes', './decorators/Attributes'],
+  [ 'formgroup', './decorators/FormGroup'],
+  [ 'layout', './decorators/Layout']
+])
 
-let decorators = {}
+library.forEach((path,name)=> {
+  library.set(name, {
+    decorator: require(path).default,
+    config: require(path).config,
+    position: require(path).position
+  })
+})
 
-for (let decorator of config) {
-  decorators[decorator.name] = require(decorator.path).default
+library.apply = (componentLibrary)=> applyDecorators(library,componentLibrary)
+
+library.subset = (names)=> {
+  allDecorators = Array.from(library.keys())
+  const diff = difference(names,allDecorators)
+  if (diff.length > 0)
+    throw new Error(`Unknown decorator(s): ${diff.join(',')} (available: ${allDecorators.join(',')})`)
+  return new Map(map(names,(name)=> [name, library.get(name)]))  
 }
 
-let DecoratorConfiguration = {}
-
-
-for (let decorator of config) {
-  DecoratorConfiguration[decorator.name] = require(decorator.path).config
-}
-
-export default decorators
-export { DecoratorConfiguration }
+export default library

@@ -1,32 +1,18 @@
 
 
-const config = [
-  {
-    name: 'textarea',
-    path: './components/Textarea'
-  },
-  {
-    name: 'text',
-    path: './components/Text'
-  },
-  {
-    name: 'checkbox',
-    path: './components/Checkbox'
-  },
-]
+const library = new Map([
+  [ 'textarea','./components/Textarea' ],
+  [ 'text', './components/Text'],
+  [ 'checkbox','./components/Checkbox']
+])
 
-let components = {}
+// replace the paths with components and their config
 
-for (let component of config) {
-  components[component.name] = require(component.path).default
-}
+library.forEach((path,name)=> {
+  library.set(name, {
+    component: require(path).default,
+    config: require(path).config
+  })
+})
 
-let ComponentConfiguration = {}
-
-
-for (let component of config) {
-  ComponentConfiguration[component.name] = require(component.path).config
-}
-
-export default components
-export { ComponentConfiguration }
+export default library

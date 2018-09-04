@@ -43,7 +43,7 @@ class FormEditor extends Component {
     this.setState({elements})
   }
   render() {
-    const { library, componentConfigurations } = this.props
+    const { library } = this.props
     return (
       <Container>
         <ButtonMenu library={library} addElement={this.addElement}/>
@@ -85,7 +85,7 @@ class FormEditor extends Component {
 const ButtonMenu = (props)=> {
   return (
     <Row>
-      {map(props.library,(FormComponent,type)=> {
+      {props.library.map((component,type)=> {
         return <Col key={`add-${type}`}><Button onClick={()=>props.addElement(type)}>Add {type}</Button></Col>
       }
       )}

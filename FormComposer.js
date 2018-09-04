@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Form } from 'reactstrap'
 import { map } from 'lodash'
-import reformed from 'react-reformed'
 
 class FormComposer extends Component {
   constructor(props) {
@@ -14,8 +13,8 @@ class FormComposer extends Component {
   renderElements(props) {
     const { elements,library, ...additionalProps } = props
     return map(elements, element => {
-      if (library.hasOwnProperty(element.type)) {
-        let Component = library[element.type];
+      if (library.has(element.type)) {
+        let Component = library.get(element.type).component;
         return <Component key={element.name} element={element} {...additionalProps} />
       } else {
         console.log(`Unknown element type: ${element.type}`)
@@ -34,6 +33,4 @@ class FormComposer extends Component {
   }
 }
 
-const ReformedFormComposer = reformed()(FormComposer)
-
-export { FormComposer, ReformedFormComposer }
+export { FormComposer }

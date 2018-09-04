@@ -12,6 +12,17 @@ import {
  * DECORATORS
  */ 
 
+const applyDecorators = (decoratorLibrary,componentLibrary)=> {
+  componentLibrary.forEach((componentEntry,componentName)=> {
+    decoratorLibrary.forEach(({decorator},decoratorName)=> {     
+      if (!isFunction(decorator)) {
+        throw new TypeError(`Expected a decorator function for ${decoratorName}`)
+      }
+      componentEntry.component = decorator(componentEntry.component)  
+    })
+  })
+}
+
 /*
  * Use this to generate a function that will "decorate" a component library
  * with the specified decorator.
@@ -47,7 +58,7 @@ const flowDecoratorConfig = (combine) => (decoratorConfigurations,filter=stubTru
 
 const flowDecoratorConfigFirst = flowDecoratorConfig(union)
 const flowDecoratorConfigLast = flowDecoratorConfig(flip(union))
-  
+
 /**
  * This function modifies the configurations of supported components
  * by adding the config for a label. 
@@ -74,5 +85,6 @@ export {
   flowDecorators, 
   flowDecoratorConfigFirst, 
   flowDecoratorConfigLast,
-  flowDecoratorConfig
+  flowDecoratorConfig,
+  applyDecorators
 }
