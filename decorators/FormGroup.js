@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormGroup, Label } from 'reactstrap'
-import { map,union } from 'lodash'
+import { map,union,flip } from 'lodash'
 
 const FormGroupDecorator = WrappedComponent => props => ( 
   <FormGroup>
@@ -18,5 +18,8 @@ const config = [
   }
 ]
 
+// Configuration of label is put in front
+const combine = flip(union)
+
 export default FormGroupDecorator
-export { config }
+export { config, combine }

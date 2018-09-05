@@ -4,43 +4,47 @@ import { applyDecorators } from './helpers'
 import ComponentLibrary from './Components'
 import DecoratorLibrary from './Decorators'
 import { FormComposer } from './FormComposer'
-import { has, set,get, defaults } from 'lodash'
+import { FormEditor } from './FormEditor'
+import { has, set, get, defaults, isEmpty } from 'lodash'
 
-const EasyForm = {
-  library: ComponentLibrary,
-  decorators: DecoratorLibrary,
+class EasyForm {
+  constructor({library = ComponentLibrary, decorators = DecoratorLibrary}={}) {
+    this.library = library
+    this.decorators = decorators
+  }
   addComponent(name,component) {
-    if (EasyForm.library.has(name))
+    if (this.library.has(name))
       console.log(`Warning: Replacing default ${name} component`)
-    EasyForm.library.set(name,component)
-  },
+    this.library.set(name,component)
+  }
   addDecorator(name,decorator) {
-    if (EasyForm.decorators.has(name))
+    if (this.decorators.has(name))
       console.log(`Warning: Replacing default ${name} decorator`)
-    EasyForm.decorators.set(name,decorator)
-  },
-  configure(config = {}) {
-    defaults(config,{
-      decorators: []
-    })
-    decorators = EasyForm.decorators.subset(config.decorators)    
-    applyDecorators(decorators,EasyForm.library)
-    return EasyForm.instance(config.middleware)
-  },
-  fullConfiguration(config = {}) {
-    defaults(config,{ decorators: DecoratorLibrary.keys() })
-    return EasyForm.configure(config)
-  },
-  instance(middleware) {
-    const ReformedFormComposer = reformed(middleware)(FormComposer)
+    this.decorators.set(name,decorator)
+  }
+  modifyLibrary(config) {
+    decorators = isEmpty(config.decorators) ? this.decorators : this.decorators.subset(config.decorators)
+    components = isEmpty(config.components) ? this.library.clone() : this.library.subset(config.components)
+    decorators.apply(components)
+    return components
+  }
+  instance(config = {}) {
+    components = this.modifyLibrary(config)
+    const ReformedFormComposer = reformed(config.middleware)(FormComposer)
     return (props) => {
-      return <ReformedFormComposer library={EasyForm.library} {...props} />
+      return <ReformedFormComposer library={components} {...props}>
+        {props.children}
+      </ReformedFormComposer>
     }
   }
-}
-
-const EasyFormEditor = {
-    
+  editor(config = {}) {
+    components = this.modifyLibrary(config)
+    return (props) => {
+      return <FormEditor library={components} {...props}>
+        {props.children}
+      </FormEditor>
+    }
+  }
 }
 
 export { EasyForm }

@@ -1,6 +1,6 @@
+import { Library } from './Library'
 
-
-const library = new Map([
+const library = new Library([
   [ 'textarea','./components/Textarea' ],
   [ 'text', './components/Text'],
   [ 'checkbox','./components/Checkbox']

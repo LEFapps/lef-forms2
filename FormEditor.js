@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FormComposer, ReformedFormComposer } from './FormComposer'
+import { FormComposer } from './FormComposer'
 import { Container, Row, Col, Button } from 'reactstrap'
 import reformed from './reformed'
 import { flow, map } from 'lodash'
@@ -35,7 +35,7 @@ class FormEditor extends Component {
     return element
   }
   save = ()=>{
-   console.log(this.state.elements) 
+   this.props.onSubmit(this.state.elements) 
   }
   addElement = (type)=> {
     const elements = this.state.elements
@@ -44,11 +44,13 @@ class FormEditor extends Component {
   }
   render() {
     const { library } = this.props
+    const { previewLibrary = library } = this.props
+    const ReformedFormComposer = reformed()(FormComposer)
     return (
       <Container>
         <ButtonMenu library={library} addElement={this.addElement}/>
         {this.state.elements.map((element,index) => {
-          const elements = componentConfigurations[element.type]
+          const elements = library.get(element.type).config
           const setElementModel = (el)=> {
             this.setElement(index,el)
             return el
@@ -65,7 +67,7 @@ class FormEditor extends Component {
           )
         })}
         <Row>
-          <Col>
+          <Col md={12}>
             <Button onClick={this.save}>Save</Button>
           </Col>
         </Row>
@@ -73,7 +75,7 @@ class FormEditor extends Component {
           <h3>Preview</h3>
         </Row>
         <ReformedFormComposer
-          library={library}
+          library={previewLibrary}
           elements={this.state.elements}
           formAttributes={{className:"row"}}
         />
@@ -85,7 +87,7 @@ class FormEditor extends Component {
 const ButtonMenu = (props)=> {
   return (
     <Row>
-      {props.library.map((component,type)=> {
+      {Array.from(props.library.keys()).map((type)=> {
         return <Col key={`add-${type}`}><Button onClick={()=>props.addElement(type)}>Add {type}</Button></Col>
       }
       )}

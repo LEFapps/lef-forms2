@@ -1,31 +1,23 @@
-import { applyDecorators } from './helpers'
-import { map, difference } from 'lodash'
+import { DecoratorLibrary } from './Library'
+import { union, stubTrue, isFunction, isArray } from 'lodash'
 
 /* Note: the sequence here determines the sequence 
  * in which they are applied in EasyForm!
  */
-const library = new Map([
+const library = new DecoratorLibrary([
   [ 'attributes', './decorators/Attributes'],
   [ 'formgroup', './decorators/FormGroup'],
   [ 'layout', './decorators/Layout']
 ])
 
 library.forEach((path,name)=> {
+  decorator = require(path)
   library.set(name, {
-    decorator: require(path).default,
-    config: require(path).config,
-    position: require(path).position
+    decorator: decorator.default,
+    config: isArray(decorator.config) ? decorator.config : [],
+    combine: isFunction(decorator.combine) ? decorator.combine : union,
+    filter: isFunction(decorator.filter) ? decorator.filter : stubTrue,
   })
 })
-
-library.apply = (componentLibrary)=> applyDecorators(library,componentLibrary)
-
-library.subset = (names)=> {
-  allDecorators = Array.from(library.keys())
-  const diff = difference(names,allDecorators)
-  if (diff.length > 0)
-    throw new Error(`Unknown decorator(s): ${diff.join(',')} (available: ${allDecorators.join(',')})`)
-  return new Map(map(names,(name)=> [name, library.get(name)]))  
-}
 
 export default library

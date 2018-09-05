@@ -6,22 +6,14 @@ import {
   flip,
   isArray,
   isFunction,
-  stubTrue } from 'lodash'
+  stubTrue,
+  difference
+} from 'lodash'
+
 
 /*
  * DECORATORS
  */ 
-
-const applyDecorators = (decoratorLibrary,componentLibrary)=> {
-  componentLibrary.forEach((componentEntry,componentName)=> {
-    decoratorLibrary.forEach(({decorator},decoratorName)=> {     
-      if (!isFunction(decorator)) {
-        throw new TypeError(`Expected a decorator function for ${decoratorName}`)
-      }
-      componentEntry.component = decorator(componentEntry.component)  
-    })
-  })
-}
 
 /*
  * Use this to generate a function that will "decorate" a component library
@@ -86,5 +78,5 @@ export {
   flowDecoratorConfigFirst, 
   flowDecoratorConfigLast,
   flowDecoratorConfig,
-  applyDecorators
+  applyDecorators,
 }
