@@ -44,7 +44,7 @@ class Example extends Component {
         initialModel={{bar: "Example text"}}
         onSubmit={this._onSubmit}
         <Button type="submit">Submit</Button>
-      </FormComposer>
+      </MyForm>
     )
   }
 }
@@ -108,11 +108,11 @@ class Example extends Component {
   }
   render() {
     return (
-      <MyForm
+      <MyFormEditor
         initialModel={formElements}
         onSubmit={this._onSubmit}
         <Button type="submit">Submit</Button>
-      </FormComposer>
+      </MyFormEditor>
     )
   }
 }
@@ -170,18 +170,18 @@ When adding a component, you can for example do it like this:
 
 ```JSX
 const easyForm = new EasyForm()
-const componentPath = '../imports/components/TextComponents'
+const path = '../imports/components/TextComponent'
 easyForm.addComponent("mytext",{
     component: require(path).default,
     config: require(path).config
 })
 ```
 
-(You could also directly add the component and it's configuration to a `Library`.
+You could also directly add the component and its configuration to a `Library`.
 
 
 ## Decorators
- 
+  
 This is where the magic happens. Essentially what we can do is _modify_ the component library, so that a higher order component (the decorator) is in control of the render function. The decorator can e.g. inject props, decide to render something completely different or wrap the component in something.
 
 Let's assume for instance that we would like to wrap every form component in a `FormGroup` and add a label if is present in the element configuration. It would look something like this:
@@ -206,7 +206,7 @@ const config = [
 
 // Configuration of label is put in front
 const combine = _.flip(_.union)
-// we're only interested in certain fields:
+// we're only interested in certain components:
 const filter = (componentType)=> _.includes(["textarea","text"],componentType)
 
 export default FormGroupDecorator
@@ -250,3 +250,4 @@ const formElements = [
 
 Note that the `props` that are passed to the decorator include both `element` configuration, as well as the `model`. This means the decorator could easily respond to the current values in _any part_ of the form.
 
+If you are creating a large component and/or decorator library, it might be worthwhile to have a look at `Components.js` and `Decorators.js` for ideas on how to bring the together.
