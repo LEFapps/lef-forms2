@@ -17,10 +17,16 @@ class EasyForm {
       console.log(`Warning: Replacing default ${name} component`)
     this.library.set(name,component)
   }
+  removeComponent(name) {
+    this.library.delete(name)
+  }
   addDecorator(name,decorator) {
     if (this.decorators.has(name))
       console.log(`Warning: Replacing default ${name} decorator`)
     this.decorators.set(name,decorator)
+  }
+  removeDecorator(name) {
+    this.decorators.delete(name)
   }
   modifyLibrary(config) {
     decorators = isEmpty(config.decorators) ? this.decorators : this.decorators.subset(config.decorators)

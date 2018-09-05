@@ -1,40 +1,36 @@
-import { FormComposer, ReformedFormComposer } from './FormComposer'
+import { EasyForm } from './EasyForm'
+import { FormComposer } from './FormComposer'
+import { ElementEditor, FormEditor } from './FormEditor'
+import DefaultComponents  from './Components'
+import DefaultDecorators from './Decorators'
+
 import Textarea from './components/Textarea'
 import TextInput from './components/Text'
 import Checkbox from './components/Checkbox'
-import ComponentLibrary  from './Components'
-import DecoratorLibrary from './Decorators'
-import { 
-  decorate,
-  flowDecorators,
-  flowDecoratorConfigFirst,
-  flowDecoratorConfigLast,
-  flowDecoratorConfig
-} from './helpers'
+
 import FormGroupDecorator from './decorators/FormGroup'
 import AttributesDecorator from './decorators/Attributes'
 import LayoutDecorator from './decorators/Layout'
-import { ElementEditor, FormEditor } from './FormEditor'
-import { EasyForm } from './EasyForm'
 
 // console.log(ComponentConfiguration)
 
 export {
   EasyForm,
-  ComponentLibrary,
-  DecoratorLibrary,
   FormComposer, 
+  FormEditor,
+  ElementEditor,
+  DefaultComponents,
+  DefaultDecorators
+}
+
+export {
   TextArea,
   TextInput,
-  Checkbox,
-  decorate, 
-  flowDecorators,
+  Checkbox
+}
+
+export {
   FormGroupDecorator,
   AttributesDecorator,
   LayoutDecorator,
-  ElementEditor,
-  FormEditor,
-  flowDecoratorConfigFirst,
-  flowDecoratorConfigLast,
-  flowDecoratorConfig
 }
