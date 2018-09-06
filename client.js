@@ -1,7 +1,7 @@
 import { EasyForm } from './EasyForm'
 import { FormComposer } from './FormComposer'
 import { ElementEditor, FormEditor } from './FormEditor'
-import DefaultComponents  from './Components'
+import DefaultComponents from './Components'
 import DefaultDecorators from './Decorators'
 
 import Textarea from './components/Textarea'
@@ -19,7 +19,7 @@ import ValidateDecorator from './decorators/Validate'
 
 export {
   EasyForm,
-  FormComposer, 
+  FormComposer,
   FormEditor,
   ElementEditor,
   DefaultComponents,
@@ -27,14 +27,16 @@ export {
 }
 
 export {
-  TextArea,
+  Textarea,
   TextInput,
-  Checkbox
+  Checkbox,
+  Select
 }
 
 export {
   FormGroupDecorator,
   AttributesDecorator,
   LayoutDecorator,
-  ValidateDecorator
+  ValidateDecorator,
+  DependentDecorator
 }

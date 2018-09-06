@@ -3,26 +3,27 @@ import { Form } from 'reactstrap'
 import { map } from 'lodash'
 
 class FormComposer extends Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
+    this._onSubmit = this._onSubmit.bind(this)
   }
-  _onSubmit = (e)=> {
+  _onSubmit (e) {
     e.preventDefault()
     this.props.onSubmit(this.props.model)
   }
-  renderElements(props) {
-    const { elements,library, ...additionalProps } = props
+  renderElements (props) {
+    const { elements, library, ...additionalProps } = props
     return map(elements, element => {
       if (library.has(element.type)) {
-        let Component = library.get(element.type).component;
+        let Component = library.get(element.type).component
         return <Component key={element.name} element={element} {...additionalProps} />
       } else {
         console.log(`Unknown element type: ${element.type}`)
-        return null;
+        return null
       }
     })
   }
-  render() {
+  render () {
     const { formAttributes } = this.props
     return (
       <Form onSubmit={this._onSubmit} {...formAttributes}>

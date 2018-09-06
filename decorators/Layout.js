@@ -1,6 +1,5 @@
 import React from 'react'
 import { Col } from 'reactstrap'
-import { map,union } from 'lodash'
 
 const LayoutDecorator = WrappedComponent => props => {
   if (props.element.layout) {
@@ -14,10 +13,10 @@ const LayoutDecorator = WrappedComponent => props => {
 
 const config = [
   {
-    name: "layout.col.md",
-    type: "text",
-    label: "Column width",
-    layout: {col: {md:"6"}}
+    name: 'layout.col.md',
+    type: 'text',
+    label: 'Column width',
+    layout: { col: { md: '6' } }
   }
 ]
 

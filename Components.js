@@ -3,14 +3,14 @@ import { isArray } from 'lodash'
 
 const library = new Library([
   [ 'textarea', './components/Textarea' ],
-  [ 'text', './components/Text'],
-  [ 'checkbox', './components/Checkbox'],
-  [ 'select', './components/Select']
+  [ 'text', './components/Text' ],
+  [ 'checkbox', './components/Checkbox' ],
+  [ 'select', './components/Select' ]
 ])
 
 // replace the paths with components and their config
 
-library.forEach((path,name)=> {
+library.forEach((path, name) => {
   const component = require(path)
   library.set(name, {
     component: component.default,
