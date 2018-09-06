@@ -38,34 +38,12 @@ const makeWrapper = middleware => WrappedComponent => {
     makeHelpers = modelHandler => {
       bindToChangeEvent = e => {
         const { name, type, value } = e.target
-        if (type === 'checkbox') {
-          const oldCheckboxValue = modelHandler.getModelValue(name) || []
-          const newCheckboxValue = e.target.checked
-            ? oldCheckboxValue.concat(value)
-            : oldCheckboxValue.filter(v => v !== value)
-
-          modelHandler.setModelValue(name, newCheckboxValue)
-        } else {
-          modelHandler.setModelValue(name, value)
-        }
+        modelHandler.setModelValue(name, value)
       }
       helpers = {
         setModel: model => modelHandler.setModel(model),
         setProperty: (prop, value) => modelHandler.setModelValue(prop, value),
-        bindToChangeEvent: e => {
-          const { name, type, value } = e.target
-
-          if (type === 'checkbox') {
-            const oldCheckboxValue = modelHandler.getModelValue(name) || []
-            const newCheckboxValue = e.target.checked
-              ? oldCheckboxValue.concat(value)
-              : oldCheckboxValue.filter(v => v !== value)
-
-            modelHandler.setModelValue(name, newCheckboxValue)
-          } else {
-            modelHandler.setModelValue(name, value)
-          }
-        },
+        bindToChangeEvent: bindToChangeEvent,
         bindInput: name => {
           return {
             name,
