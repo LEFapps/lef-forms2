@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import reformed from './reformed'
-import { applyDecorators } from './helpers'
 import ComponentLibrary from './Components'
 import DecoratorLibrary from './Decorators'
 import { FormComposer } from './FormComposer'

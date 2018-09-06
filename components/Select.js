@@ -1,13 +1,14 @@
-import React, { Component } from 'react'
-import { Input } from 'reactstrap'
+import React from 'react'
 import GenericInput from './GenericInput'
-import { map } from 'lodash'
+import { zip, isArray } from 'lodash'
 
-const Select = props => { 
+const Select = props => {
   const { element } = props
+  const names = isArray(element.optionNames) ? element.optionNames : element.options
+  const pairs = zip(names, element.options)
   return (
     <GenericInput {...props}>
-      { element.options.map((option,i)=> <option key={`option-${i}`}>{option}</option>)}
+      { pairs.map((option, i) => <option key={`${element.name}-option-${i}`} value={option[1]}>{option[0]}</option>)}
     </GenericInput>
   )
 }

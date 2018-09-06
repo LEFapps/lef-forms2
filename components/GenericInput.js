@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Input } from 'reactstrap'
 
-const GenericInput = ({ bindInput, element, attributes, children })=> {
+const GenericInput = ({ bindInput, element, attributes, children }) => {
   const { name, type, attributes: elementAttributes } = element
-  return <Input type={type}  {...bindInput(name)} {...elementAttributes} {...attributes}>
+  return <Input type={type} {...bindInput(name)} {...elementAttributes} {...attributes}>
     {children}
   </Input>
 }
