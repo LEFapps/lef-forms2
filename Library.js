@@ -57,7 +57,9 @@ class DecoratorLibrary extends Library {
         // is this decorator interested?
         if (filter(targetKey)) {
           // apply the decorator
+          const originalDisplayName = target.component.displayName || target.component.name || "Component"
           target.component = decorator(target.component)
+          target.component.displayName = `${sourceKey}(${originalDisplayName})`
           // combine configurations
           const componentConfig = grab(target,'config',isArray,targetKey)
           target.config = combine(componentConfig,decoratorConfig)

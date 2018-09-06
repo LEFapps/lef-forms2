@@ -3,8 +3,6 @@ import { Input } from 'reactstrap'
 import GenericInput from './GenericInput'
 
 const Checkbox = GenericInput
-
-Checkbox.displayName = "Checkbox"
   
 const config = [
       {

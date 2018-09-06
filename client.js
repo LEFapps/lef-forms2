@@ -7,10 +7,12 @@ import DefaultDecorators from './Decorators'
 import Textarea from './components/Textarea'
 import TextInput from './components/Text'
 import Checkbox from './components/Checkbox'
+import Select from './components/Select'
 
 import FormGroupDecorator from './decorators/FormGroup'
 import AttributesDecorator from './decorators/Attributes'
 import LayoutDecorator from './decorators/Layout'
+import DependentDecorator from './decorators/Dependent'
 
 // console.log(ComponentConfiguration)
 

@@ -1,17 +1,20 @@
 import { Library } from './Library'
+import { isArray } from 'lodash'
 
 const library = new Library([
-  [ 'textarea','./components/Textarea' ],
+  [ 'textarea', './components/Textarea' ],
   [ 'text', './components/Text'],
-  [ 'checkbox','./components/Checkbox']
+  [ 'checkbox', './components/Checkbox'],
+  [ 'select', './components/Select']
 ])
 
 // replace the paths with components and their config
 
 library.forEach((path,name)=> {
+  const component = require(path)
   library.set(name, {
-    component: require(path).default,
-    config: require(path).config
+    component: component.default,
+    config: isArray(component.config) ? component.config : []
   })
 })
 
