@@ -1,23 +1,35 @@
-import React, { Component } from 'react'
-import { Input } from 'reactstrap'
+import React from 'react'
 import GenericInput from './GenericInput'
+import { get } from 'lodash'
 
-const Checkbox = GenericInput
-  
+const Checkbox = props => {
+  const { bindInput, ...xProps } = props
+  const bindCheckedInput = name => {
+    return {
+      name,
+      checked: get(props.model, name),
+      onChange: e => props.setProperty(name, e.target.checked)
+    }
+  }
+  return <GenericInput {...xProps} bindInput={bindCheckedInput} />
+}
+
+Checkbox.displayName = 'Checkbox'
+
 const config = [
-      {
-        name: "name",
-        type: "text",
-        label: "Field name",
-        validation: { required: true },
-        layout: {col: {md:"12"}},
-      },
-      {
-        name: "value",
-        type: "text",
-        label: "Value",
-        layout: {col: { md:"12" }}
-      }
+  {
+    name: 'name',
+    type: 'text',
+    label: 'Field name',
+    validation: { required: true },
+    layout: { col: { md: '12' } }
+  },
+  {
+    name: 'value',
+    type: 'text',
+    label: 'Value',
+    layout: { col: { md: '12' } }
+  }
 ]
 
 export default Checkbox

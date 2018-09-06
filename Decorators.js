@@ -5,6 +5,7 @@ import { union, stubTrue, isFunction, isArray } from 'lodash'
  * in which they are applied in EasyForm!
  */
 const library = new DecoratorLibrary([
+  [ 'validate', './decorators/Validate' ],
   [ 'dependent', './decorators/Dependent'],
   [ 'attributes', './decorators/Attributes'],
   [ 'formgroup', './decorators/FormGroup'],

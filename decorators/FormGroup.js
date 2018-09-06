@@ -1,20 +1,36 @@
 import React from 'react'
 import { FormGroup, Label } from 'reactstrap'
-import { map,union,flip } from 'lodash'
+import { includes, union, flip } from 'lodash'
 
-const FormGroupDecorator = WrappedComponent => props => ( 
-  <FormGroup>
-    {props.element.label?<Label for={props.element.name}>{props.element.label}</Label>:null}
-    <WrappedComponent {...props} />
-  </FormGroup>
-)
+const FormGroupDecorator = WrappedComponent => props => {
+  if (includes(['radio', 'checkbox'], props.element.type)) {
+    const { label } = props.element || ''
+    return (
+      <FormGroup check>
+        <Label for={props.element.name} check>
+          <WrappedComponent {...props} />
+          {label}
+        </Label>
+      </FormGroup>
+    )
+  } else {
+    return (
+      <FormGroup>
+        {props.element.label
+          ? <Label for={props.element.name}>{props.element.label}</Label>
+          : null}
+        <WrappedComponent {...props} />
+      </FormGroup>
+    )
+  }
+}
 
 const config = [
   {
-    name: "label",
-    type: "textarea",
-    label: "Field label or introduction",
-    layout: {col: {md:"12"}}
+    name: 'label',
+    type: 'textarea',
+    label: 'Field label or introduction',
+    layout: { col: { md: '12' } }
   }
 ]
 

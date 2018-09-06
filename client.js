@@ -13,6 +13,7 @@ import FormGroupDecorator from './decorators/FormGroup'
 import AttributesDecorator from './decorators/Attributes'
 import LayoutDecorator from './decorators/Layout'
 import DependentDecorator from './decorators/Dependent'
+import ValidateDecorator from './decorators/Validate'
 
 // console.log(ComponentConfiguration)
 
@@ -35,4 +36,5 @@ export {
   FormGroupDecorator,
   AttributesDecorator,
   LayoutDecorator,
+  ValidateDecorator
 }
