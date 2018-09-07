@@ -15,7 +15,8 @@ Package.onUse(function (api) {
     'react-dom': '16.4.2',
     'react-reformed': '2.0.0',
     'reactstrap': '6.4.0',
-    'lodash': '4.17.10'
+    'lodash': '4.17.10',
+    'ajv': '6.5.3'
   })
   api.mainModule('client.js', 'client')
 })

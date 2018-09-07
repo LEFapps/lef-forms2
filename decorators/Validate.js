@@ -6,12 +6,12 @@ const Validate = WrappedComponent => props => {
   if (get(props.errors, props.element.name)) {
     let { attributes, ...xProps } = props
     attributes = attributes || {}
-    const { feedback } = props.element.validate
+    const { description } = props.element.schema
     attributes.invalid = true
     return (
       <>
         <WrappedComponent {...xProps} attributes={attributes} />
-        { feedback ? <FormFeedback>{feedback}</FormFeedback> : null }
+        { description ? <FormFeedback>{description}</FormFeedback> : null }
       </>
     )
   } else {
@@ -19,4 +19,14 @@ const Validate = WrappedComponent => props => {
   }
 }
 
+const config = [
+  {
+    name: 'required',
+    type: 'checkbox',
+    label: 'Required',
+    layout: { col: { md: 12 } }
+  }
+]
+
 export default Validate
+export { config }

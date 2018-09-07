@@ -1,5 +1,6 @@
 import React from 'react'
 import reformed from './reformed'
+import validate from './validate'
 import ComponentLibrary from './Components'
 import DecoratorLibrary from './Decorators'
 import { FormComposer } from './FormComposer'
@@ -33,7 +34,7 @@ class EasyForm {
   }
   instance (config = {}) {
     const components = this.modifyLibrary(config)
-    const ReformedFormComposer = reformed(config.middleware)(FormComposer)
+    const ReformedFormComposer = validate(reformed(config.middleware)(FormComposer))
     return (props) => {
       return <ReformedFormComposer library={components} {...props}>
         {props.children}
