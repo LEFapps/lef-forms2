@@ -9,14 +9,14 @@ Package.describe({
 
 Package.onUse(function (api) {
   api.versionsFrom('1.7.0.4')
-  api.use('ecmascript')
+  api.use(['ecmascript', 'lef:imgupload'])
   Npm.depends({
-    react: '16.4.2',
+    react: '16.5.0',
     'react-dom': '16.4.2',
     'react-reformed': '2.0.0',
-    'reactstrap': '6.4.0',
-    'lodash': '4.17.10',
-    'ajv': '6.5.3'
+    reactstrap: '6.4.0',
+    lodash: '4.17.10',
+    ajv: '6.5.3'
   })
   api.mainModule('client.js', 'client')
 })

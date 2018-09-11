@@ -26,12 +26,7 @@ export {
   DefaultDecorators
 }
 
-export {
-  Textarea,
-  TextInput,
-  Checkbox,
-  Select
-}
+export { Textarea, TextInput, Checkbox, Select }
 
 export {
   FormGroupDecorator,

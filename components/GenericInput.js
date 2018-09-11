@@ -15,7 +15,25 @@ const GenericInput = ({ bindInput, element, attributes, children }) => {
   )
 }
 
+const GenericInputNoChildren = ({
+  bindInput,
+  element,
+  attributes,
+  children
+}) => {
+  const { name, type, attributes: elementAttributes } = element
+  return (
+    <Input
+      type={type}
+      {...bindInput(name)}
+      {...elementAttributes}
+      {...attributes}
+    />
+  )
+}
+
 GenericInput.displayName = 'Input'
+GenericInputNoChildren.displayName = 'Input'
 
 const config = [
   {
@@ -37,4 +55,4 @@ const config = [
 ]
 
 export default GenericInput
-export { config }
+export { config, GenericInputNoChildren }

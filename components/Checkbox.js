@@ -1,5 +1,5 @@
 import React from 'react'
-import GenericInput from './GenericInput'
+import { GenericInputNoChildren } from './GenericInput'
 import { get } from 'lodash'
 
 const Checkbox = props => {
@@ -11,7 +11,7 @@ const Checkbox = props => {
       onChange: e => props.setProperty(name, e.target.checked)
     }
   }
-  return <GenericInput {...xProps} bindInput={bindCheckedInput} />
+  return <GenericInputNoChildren {...xProps} bindInput={bindCheckedInput} />
 }
 
 Checkbox.displayName = 'Checkbox'

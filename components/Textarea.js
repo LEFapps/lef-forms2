@@ -1,6 +1,22 @@
-import GenericInput from './GenericInput'
+import React from 'react'
+import { GenericInputNoChildren } from './GenericInput'
+import { MarkdownImageUpload } from 'meteor/lef:imgupload'
+import { get } from 'lodash'
 
-const Textarea = GenericInput
+const Textarea = props => {
+  const onUrl = url => {
+    props.setProperty(
+      props.element.name,
+      `${get(props.model, props.element.name)}\n${url}`
+    )
+  }
+  return (
+    <>
+      <GenericInputNoChildren {...props} />
+      {props.element.md ? <MarkdownImageUpload onSubmit={onUrl} /> : null}
+    </>
+  )
+}
 
 const config = [
   {
