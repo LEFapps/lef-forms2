@@ -2,6 +2,7 @@ import React from 'react'
 import { GenericInputNoChildren } from './GenericInput'
 import { MarkdownImageUpload } from 'meteor/lef:imgupload'
 import { get } from 'lodash'
+import { MarkdownHelp } from 'meteor/lef:translations'
 
 const Textarea = props => {
   const onUrl = url => {
@@ -13,7 +14,11 @@ const Textarea = props => {
   return (
     <>
       <GenericInputNoChildren {...props} />
-      {props.element.md ? <MarkdownImageUpload onSubmit={onUrl} /> : null}
+      {props.element.md ? (
+        <>
+          <MarkdownHelp />
+          <MarkdownImageUpload onSubmit={onUrl} />
+        </>) : null}
     </>
   )
 }
