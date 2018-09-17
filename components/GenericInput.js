@@ -15,12 +15,7 @@ const GenericInput = ({ bindInput, element, attributes, children }) => {
   )
 }
 
-const GenericInputNoChildren = ({
-  bindInput,
-  element,
-  attributes,
-  children
-}) => {
+const GenericInputNoChildren = ({ bindInput, element, attributes }) => {
   const { name, type, attributes: elementAttributes } = element
   return (
     <Input
