@@ -2,7 +2,8 @@ import {
   map,
   isArray,
   isFunction,
-  difference
+  difference,
+  cloneDeep
 } from 'lodash'
 
 class Library extends Map {
@@ -16,10 +17,10 @@ class Library extends Map {
     return new Library(map(keys, (k) => [k, this.get(k)]))
   }
   /*
-   * Create a (shallow) clone.
+   * Create a (deep) clone.
    */
   clone () {
-    return new Library(this.entries())
+    return cloneDeep(this)
   }
 }
 
