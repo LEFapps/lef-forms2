@@ -1,7 +1,7 @@
 import { Library } from './Library'
 import { isArray } from 'lodash'
 
-// cannot be used by require() otherwise since it's not imported anywhere else
+// cannot be used by require() since it's not imported anywhere else
 import GenericInputNoChildren from './components/GenericInputNoChildren'
 
 const library = new Library([
@@ -12,6 +12,7 @@ const library = new Library([
   ['password', './components/GenericInputNoChildren'],
   ['email', './components/GenericInputNoChildren'],
   ['phone', './components/GenericInputNoChildren'],
+  ['number', './components/GenericInputNoChildren'],
   ['checkbox', './components/Checkbox']
 ])
 
