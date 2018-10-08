@@ -13,6 +13,7 @@ const library = new Library([
   ['email', './components/GenericInputNoChildren'],
   ['phone', './components/GenericInputNoChildren'],
   ['number', './components/GenericInputNoChildren'],
+  ['datetime-local', './components/GenericInputNoChildren'],
   ['checkbox', './components/Checkbox']
 ])
 
