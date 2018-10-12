@@ -16,9 +16,9 @@ const FormGroupDecorator = WrappedComponent => props => {
   } else {
     return (
       <FormGroup>
-        {props.element.label
-          ? <Label for={props.element.name}>{props.element.label}</Label>
-          : null}
+        {props.element.label ? (
+          <Label for={props.element.name}>{props.element.label}</Label>
+        ) : null}
         <WrappedComponent {...props} />
       </FormGroup>
     )
@@ -26,12 +26,14 @@ const FormGroupDecorator = WrappedComponent => props => {
 }
 
 const config = [
-  {
-    name: 'label',
-    type: 'textarea',
-    label: 'Field label or introduction',
-    layout: { col: { md: '12' } }
-  }
+  [
+    {
+      name: 'label',
+      type: 'textarea',
+      label: 'Field label or introduction',
+      layout: { col: { md: '12' } }
+    }
+  ]
 ]
 
 // Configuration of label is put in front

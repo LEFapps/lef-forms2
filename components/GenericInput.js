@@ -1,8 +1,12 @@
 import React from 'react'
 import { Input } from 'reactstrap'
+import { get, castArray } from 'lodash'
 
 const GenericInput = ({ bindInput, element, attributes, children }) => {
   const { name, type, attributes: elementAttributes } = element
+  if (get(elementAttributes, 'multiple', false)) {
+    elementAttributes.value = castArray(elementAttributes.value)
+  }
   return (
     <Input
       type={type}

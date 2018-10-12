@@ -19,14 +19,14 @@ const Validate = WrappedComponent => props => {
   }
 }
 
-const config = [
+const config = [[
   {
     name: 'required',
     type: 'checkbox',
     label: 'Required',
     layout: { col: { md: 12 } }
   }
-]
+]]
 
 export default Validate
 export { config }

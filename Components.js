@@ -12,6 +12,7 @@ const library = new Library([
   ['password', './components/GenericInputNoChildren'],
   ['email', './components/GenericInputNoChildren'],
   ['phone', './components/GenericInputNoChildren'],
+  ['url', './components/GenericInputNoChildren'],
   ['number', './components/GenericInputNoChildren'],
   ['datetime-local', './components/GenericInputNoChildren'],
   ['checkbox', './components/Checkbox']

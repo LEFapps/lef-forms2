@@ -1,6 +1,6 @@
 Package.describe({
   name: 'lef:forms2',
-  version: '0.0.2',
+  version: '0.0.3',
   // Brief, one-line summary of the package.
   summary: 'Easy, configuration based form composition',
   git: '',

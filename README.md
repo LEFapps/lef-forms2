@@ -29,6 +29,15 @@ const formElements = [
   },
 ]
 
+const groupedFormEls = [
+  [
+    {} // elements as above
+  ],
+  [ // another group of elements
+    {}
+  ]
+]
+
 const MyForm = new EasyForm().instance()
 
 class Example extends Component {
@@ -50,29 +59,66 @@ class Example extends Component {
 }
 ```
 
+**Note:** the list of elements can be an array of objects OR an array of arrays of objects (useful when grouping elements). Only when one group is needed, the nested array is recommended.
+
 The `EasyForm` constructor accepts a configuration object with:
+
 - `library`: a component `Library`, which is an extended [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) object that holds all form components
 - `decorators`: a `DecoratorLibrary`, which is an extended `Library` that holds decorators
 
 The component library defaults to `DefaultComponents`, which is a simple library of "reformed" `reactstrap` form components. Similarly, `decorators` defaults to `DefaultDecorators`.
 
 `EasyForm.prototype.instance` is then used to create a React `Component`, which you can instantiate with `props`. You can supply a `config` object to the `instance` function, with the following supported fields:
+
 - `decorators`: an Array with the names of the decorators that you wish to apply. If not supplied, _all_ decorators are applied.
 - `components`: an Array of component types that you wish to make available to the form. If not supplied, all components are available. (Note that this is more relevant in the `editor` mode below.)
 
 For example, you might only want to apply the standard `FormGroup` decorator:
+
 ```JSX
 const MyForm = new EasyForm().instance({decorators:["formgroup"]})
 ```
+
 Note that the decorators are applied _in sequence_, either the "natural" sequence in the `DecoratorLibrary` or the sequence in the `instance` arguments (applied left to right). This is important if you need to be certain of the position of a wrapper in the hierarchy.
 
 `initialModel` is used to fill the initial values.
 
 Note that the `attributes` from the element are applied directly to the `Input` component by the `Textarea` component. This is an example of a _convention_ from this specific component library. Similarly, `name` and `type` are applied as you would expect.
 
+Blueprint of an element:
+
+```JSON
+{
+  "name" : "name.supports.nesting",
+  "key" : "only needed if name can cause indentical keys (e.g. when using dependent)",
+  "type" : "text",
+  "attributes" : {
+    "placeholder" : "placeholder",
+    "multiple": true,
+    "size": "12",
+    "rows" : "5"
+  },
+  "required" : true,
+  "dependent" : {
+    "on" : "dependentOn",
+    "operator" : "in, gt, gte, lt, lte, is; isnt, or empty",
+    "values" : "value or array of values"
+  },
+  "schema": {
+    "description": "Help text (text or Translate component)"
+  },
+  "label" : "Label (text or Translate component)",
+  "layout" : {
+    "col" : {
+      "md" : "6"
+    }
+  }
+}
+```
+
 ### Architectural note
 
-You (probably) only need to make one `EasyForm` instance per "type" of form in your application. You can simply reuse it as a component throughout your application. 
+You (probably) only need to make one `EasyForm` instance per "type" of form in your application. You can simply reuse it as a component throughout your application.
 
 ## Modifying libraries
 
@@ -86,7 +132,9 @@ MyFormConfig.addDecorator(name3,decorator)
 MyFormConfig.removeDecorator(name4)
 const MyForm = MyFormConfig.instance()
 ```
-or 
+
+or
+
 ```JSX
 const MyDecorators = DefaultDecorators.subset(["formgroup","layout"])
 const MyComponents = DefaultComponents.subset(["textarea","checkbox"])
@@ -116,7 +164,6 @@ class Example extends Component {
     )
   }
 }
-
 ```
 
 Note that you only need to supply the form elements as the initial model.
@@ -136,11 +183,11 @@ class TextComponent extends Component {
     const { bindInput, element, attributes: propsAttributes } = this.props
     const { name, type, attributes: elementAttributes } = element
     return (
-      <Input type={type}  {...bindInput(name)} {...elementAttributes} {...propsAttributes} />      
+      <Input type={type}  {...bindInput(name)} {...elementAttributes} {...propsAttributes} />
     )
   }
 }
-  
+
 const config = [
       {
         name: "name",
@@ -179,15 +226,14 @@ easyForm.addComponent("mytext",{
 
 You could also directly add the component and its configuration to a `Library`.
 
-
 ## Decorators
-  
+
 This is where the magic happens. Essentially what we can do is _modify_ the component library, so that a higher order component (the decorator) is in control of the render function. The decorator can e.g. inject props, decide to render something completely different or wrap the component in something.
 
 Let's assume for instance that we would like to wrap every form component in a `FormGroup` and add a label if is present in the element configuration. It would look something like this:
 
 ```JSX
-const FormGroupDecorator = WrappedComponent => props => ( 
+const FormGroupDecorator = WrappedComponent => props => (
   <FormGroup>
     {props.element.label?<Label for={props.element.name}>{props.element.label}</Label>:null}
     <WrappedComponent {...props} /> // don't forget to "push down" the props into the wrapped component
@@ -212,6 +258,7 @@ const filter = (componentType)=> _.includes(["textarea","text"],componentType)
 export default FormGroupDecorator
 export { config, combine, filter }
 ```
+
 You also need to add it to the `DecoratorLibrary`, for example like this:
 
 ```JSX
@@ -224,7 +271,9 @@ easyForm.addDecorator("myformgroup", {
   filter: isFunction(decorator.filter) ? decorator.filter : stubTrue,
 })
 ```
+
 Note the special (optional) configuration fields:
+
 - `filter`: a `function` that returns true if supplied with the name of a component that it wishes to modify.
 - `combine`: a `function` that is supplied with two arguments: the component `config` (an array of form fields) and the decorator `config`. By default, the decorator configuration (also an array of fields) is appended to the element form, but in this case it is added first.
 

@@ -11,8 +11,11 @@ class ElementEditor extends Component {
     // to intercept the setModel call
     // to push model state
     // up the hierarchy:
-    this.middleware = (modelHandler) => {
-      modelHandler.setModel = flow([modelHandler.setModel, this.props.setElement])
+    this.middleware = modelHandler => {
+      modelHandler.setModel = flow([
+        modelHandler.setModel,
+        this.props.setElement
+      ])
       return modelHandler
     }
     this.ElementForm = reformed(this.middleware)(FormComposer)
@@ -53,7 +56,7 @@ class FormEditor extends Component {
         <ButtonMenu library={library} addElement={this.addElement} />
         {this.state.elements.map((element, index) => {
           const elements = library.get(element.type).config
-          const setElementModel = (el) => {
+          const setElementModel = el => {
             this.setElement(index, el)
             return el
           }
@@ -63,7 +66,6 @@ class FormEditor extends Component {
               elements={elements}
               initialModel={element}
               setElement={setElementModel}
-              formAttributes={{ className: 'row' }}
               key={`element-${index}`}
             />
           )
@@ -86,13 +88,16 @@ class FormEditor extends Component {
   }
 }
 
-const ButtonMenu = (props) => {
+const ButtonMenu = props => {
   return (
     <Row>
-      {Array.from(props.library.keys()).map((type) => {
-        return <Col key={`add-${type}`}><Button onClick={() => props.addElement(type)}>Add {type}</Button></Col>
-      }
-      )}
+      {Array.from(props.library.keys()).map(type => {
+        return (
+          <Col key={`add-${type}`}>
+            <Button onClick={() => props.addElement(type)}>Add {type}</Button>
+          </Col>
+        )
+      })}
       <hr />
     </Row>
   )

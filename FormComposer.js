@@ -1,6 +1,22 @@
 import React, { Component } from 'react'
-import { Form } from 'reactstrap'
-import { map } from 'lodash'
+import { Form, Row } from 'reactstrap'
+import { map, isArray } from 'lodash'
+
+const renderElements = (element, library, additionalProps) => {
+  if (library.has(element.type)) {
+    let Component = library.get(element.type).component
+    return (
+      <Component
+        key={`${element.name}${element.key || ''}`}
+        element={element}
+        {...additionalProps}
+      />
+    )
+  } else {
+    console.log(`Unknown element type: ${element.type}`)
+    return null
+  }
+}
 
 class FormComposer extends Component {
   constructor (props) {
@@ -13,14 +29,14 @@ class FormComposer extends Component {
   }
   renderElements (props) {
     const { elements, library, ...additionalProps } = props
-    return map(elements, element => {
-      if (library.has(element.type)) {
-        let Component = library.get(element.type).component
-        return <Component key={element.name} element={element} {...additionalProps} />
-      } else {
-        console.log(`Unknown element type: ${element.type}`)
-        return null
-      }
+    return elements.map((element, key) => {
+      if (isArray(element)) {
+        return (
+          <Row key={`row-${key}`}>
+            {element.map(e => renderElements(e, library, additionalProps))}
+          </Row>
+        )
+      } else return renderElements(element, library, additionalProps)
     })
   }
   render () {
