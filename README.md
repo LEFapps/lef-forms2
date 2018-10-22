@@ -30,12 +30,9 @@ const formElements = [
 ]
 
 const groupedFormEls = [
-  [
-    {} // elements as above
-  ],
-  [ // another group of elements
-    {}
-  ]
+  {}, // elements as above
+  { type: 'divider' }, // adds 'hr'
+  {}, // elements as above
 ]
 
 const MyForm = new EasyForm().instance()
@@ -58,8 +55,6 @@ class Example extends Component {
   }
 }
 ```
-
-**Note:** the list of elements can be an array of objects OR an array of arrays of objects (useful when grouping elements). Only when one group is needed, the nested array is recommended.
 
 The `EasyForm` constructor accepts a configuration object with:
 
@@ -90,7 +85,7 @@ Blueprint of an element:
 ```JSON
 {
   "name" : "name.supports.nesting",
-  "key" : "only needed if name can cause indentical keys (e.g. when using dependent)",
+  "key" : "only needed if name can cause identical keys (e.g. when using dependent)",
   "type" : "text",
   "attributes" : {
     "placeholder" : "placeholder",

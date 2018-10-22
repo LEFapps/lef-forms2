@@ -38,18 +38,18 @@ const config = [
   {
     name: 'name',
     type: 'text',
-    label: 'Field name',
+    label: 'Field identifier',
     attributes: {
       placeholder: 'Technical name for field'
     },
-    validation: { required: true },
-    layout: { col: { md: '12' } }
+    required: true,
+    layout: { col: { xs: '12', sm: 6 } }
   },
   {
     name: 'attributes.placeholder',
     type: 'text',
     label: 'Placeholder',
-    layout: { col: { md: '12' } }
+    layout: { col: { xs: '12', sm: 6 } }
   }
 ]
 

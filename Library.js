@@ -1,10 +1,4 @@
-import {
-  map,
-  isArray,
-  isFunction,
-  difference,
-  cloneDeep
-} from 'lodash'
+import { map, isArray, isFunction, difference, cloneDeep } from 'lodash'
 
 class Library extends Map {
   /*
@@ -13,8 +7,12 @@ class Library extends Map {
   subset (keys) {
     const knownKeys = Array.from(this.keys())
     const diff = difference(keys, knownKeys)
-    if (diff.length > 0) { throw new Error(`Unknown key(s): ${diff.join(',')} (available: ${knownKeys.join(',')})`) }
-    return new Library(map(keys, (k) => [k, this.get(k)]))
+    if (diff.length > 0) {
+      throw new Error(
+        `Unknown key(s): ${diff.join(',')} (available: ${knownKeys.join(',')})`
+      )
+    }
+    return new Library(map(keys, k => [k, this.get(k)]))
   }
   /*
    * Create a (deep) clone.
@@ -27,7 +25,9 @@ class Library extends Map {
 const grab = (source, field, test, sourceName) => {
   const obj = source[field]
   if (!test(obj)) {
-    throw new TypeError(`Expected '${field}' to match ${test.name} in ${sourceName}`)
+    throw new TypeError(
+      `Expected '${field}' to match ${test.name} in ${sourceName}`
+    )
   }
   return obj
 }
@@ -49,7 +49,10 @@ class DecoratorLibrary extends Library {
         // is this decorator interested?
         if (filter(targetKey)) {
           // apply the decorator
-          const originalDisplayName = target.component.displayName || target.component.name || 'Component'
+          const originalDisplayName =
+            target.component.displayName ||
+            target.component.name ||
+            'Component'
           target.component = decorator(target.component)
           target.component.displayName = `${sourceKey}(${originalDisplayName})`
           // combine configurations

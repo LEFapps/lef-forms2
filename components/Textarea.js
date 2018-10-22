@@ -28,17 +28,23 @@ const config = [
     name: 'name',
     type: 'text',
     label: 'Field name',
-    validation: { required: true },
+    required: true,
     attributes: {
-      size: '15'
+      rows: '1'
     },
-    layout: { col: { md: '12' } }
+    layout: { col: { xs: '12', sm: 6 } }
+  },
+  {
+    name: 'attributes.placeholder',
+    type: 'text',
+    label: 'Placeholder',
+    layout: { col: { xs: '12', sm: 6 } }
   },
   {
     name: 'attributes.rows',
     type: 'text',
     label: 'Number of rows',
-    layout: { col: { md: '4' } }
+    layout: { col: { xs: 12, sm: 6, md: '4' } }
   }
 ]
 

@@ -20,15 +20,18 @@ const config = [
   {
     name: 'name',
     type: 'text',
-    label: 'Field name',
-    validation: { required: true },
-    layout: { col: { md: '12' } }
+    label: 'Field identifier',
+    attributes: {
+      placeholder: 'Technical name for field'
+    },
+    required: true,
+    layout: { col: { xs: '12', sm: 8 } }
   },
   {
     name: 'value',
     type: 'text',
     label: 'Value',
-    layout: { col: { md: '12' } }
+    layout: { col: { xs: '12', sm: 4 } }
   }
 ]
 

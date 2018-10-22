@@ -5,7 +5,9 @@ const AttributesDecorator = WrappedComponent => props => {
   if (typeof getAttributes !== 'function') {
     return <WrappedComponent {...props} />
   }
-  return <WrappedComponent {...props} attributes={getAttributes(props.element)} />
+  return (
+    <WrappedComponent {...props} attributes={getAttributes(props.element)} />
+  )
 }
 
 export default AttributesDecorator

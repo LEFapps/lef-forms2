@@ -1,8 +1,23 @@
 import React, { Component } from 'react'
 import { FormComposer } from './FormComposer'
-import { Container, Row, Col, Button } from 'reactstrap'
+import {
+  Container,
+  Row,
+  Col,
+  Badge,
+  Button,
+  ButtonGroup,
+  Card,
+  CardBody,
+  CardTitle,
+  CardSubtitle,
+  CardText,
+  CardHeader,
+  CardFooter,
+  UncontrolledCollapse
+} from 'reactstrap'
+import { flow, isArray, capitalize, upperCase, includes } from 'lodash'
 import reformed from './reformed'
-import { flow } from 'lodash'
 
 class ElementEditor extends Component {
   constructor (props) {
@@ -25,6 +40,45 @@ class ElementEditor extends Component {
   }
 }
 
+const EditorCard = ({
+  library,
+  index,
+  element,
+  elements,
+  setElementModel,
+  onRemove
+}) => {
+  const toggle = `toggle-element-${index}-${element.type}`
+  return (
+    <Card style={{ margin: '1rem 0' }}>
+      <CardHeader id={toggle}>
+        <CardTitle>{element.label || '_'}</CardTitle>
+        <CardSubtitle>
+          <small className='text-muted'>
+            <Badge color='light'>{upperCase(element.type)}</Badge>{' '}
+            {element.name || '_'}
+          </small>
+        </CardSubtitle>
+      </CardHeader>
+      <UncontrolledCollapse toggler={`#${toggle}`}>
+        <CardBody>
+          <ElementEditor
+            library={library}
+            elements={elements}
+            initialModel={element}
+            setElement={setElementModel}
+          />
+        </CardBody>
+        <CardFooter>
+          <Button color={'danger'} onClick={() => onRemove(element)}>
+            Remove
+          </Button>
+        </CardFooter>
+      </UncontrolledCollapse>
+    </Card>
+  )
+}
+
 class FormEditor extends Component {
   constructor (props) {
     super(props)
@@ -32,20 +86,40 @@ class FormEditor extends Component {
     this.setElement = this.setElement.bind(this)
     this.save = this.save.bind(this)
     this.addElement = this.addElement.bind(this)
+    this.removeElement = this.removeElement.bind(this)
   }
   setElement (index, element) {
-    const elements = this.state.elements
-    elements[index] = element
-    this.setState({ elements })
+    this.setState(prevstate => {
+      prevstate.elements[index] = element
+      return { elements: prevstate.elements }
+    })
     return element
   }
   save () {
     this.props.onSubmit(this.state.elements)
   }
   addElement (type) {
-    const elements = this.state.elements
-    elements.push({ type })
-    this.setState({ elements })
+    this.setState(prevstate => {
+      prevstate.elements.push({ type })
+      return {
+        elements: prevstate.elements
+      }
+    })
+  }
+  removeElement (element) {
+    if (
+      confirm(`Are you sure you want to remove the element "${element.name}"`)
+    ) {
+      const index = this.state.elements.indexOf(element)
+      if (index >= 0) {
+        this.setState(prevstate => {
+          prevstate.elements.splice(index, 1)
+          return {
+            elements: prevstate.elements
+          }
+        })
+      } else console.error(`Element not found (${element.name}, ${index}).`)
+    }
   }
   render () {
     const { library } = this.props
@@ -61,11 +135,13 @@ class FormEditor extends Component {
             return el
           }
           return (
-            <ElementEditor
+            <EditorCard
               library={library}
+              index={index}
+              element={element}
               elements={elements}
-              initialModel={element}
-              setElement={setElementModel}
+              setElementModel={setElementModel}
+              onRemove={this.removeElement}
               key={`element-${index}`}
             />
           )
@@ -76,13 +152,15 @@ class FormEditor extends Component {
           </Col>
         </Row>
         <Row>
-          <h3>Preview</h3>
+          <Col xs={12}>
+            <h3>Preview</h3>
+            <ReformedFormComposer
+              library={previewLibrary}
+              elements={this.state.elements}
+              formAttributes={{ className: 'row' }}
+            />
+          </Col>
         </Row>
-        <ReformedFormComposer
-          library={previewLibrary}
-          elements={this.state.elements}
-          formAttributes={{ className: 'row' }}
-        />
       </Container>
     )
   }
@@ -90,16 +168,15 @@ class FormEditor extends Component {
 
 const ButtonMenu = props => {
   return (
-    <Row>
+    <ButtonGroup>
       {Array.from(props.library.keys()).map(type => {
         return (
-          <Col key={`add-${type}`}>
-            <Button onClick={() => props.addElement(type)}>Add {type}</Button>
-          </Col>
+          <Button key={`add-${type}`} onClick={() => props.addElement(type)}>
+            {capitalize(type)}
+          </Button>
         )
       })}
-      <hr />
-    </Row>
+    </ButtonGroup>
   )
 }
 

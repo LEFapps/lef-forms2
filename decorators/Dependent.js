@@ -3,7 +3,6 @@ import {
   get,
   isEmpty,
   isUndefined,
-  isArray,
   castArray,
   intersection
 } from 'lodash'
@@ -53,18 +52,21 @@ const Dependent = WrappedComponent => props => {
 }
 
 const config = [
-  [
+  { type: 'divider' },
     {
       name: 'dependent.on',
       type: 'text',
       label: 'Dependent on field:',
-      layout: { col: { md: '4' } }
+      attributes: {
+        placeholder: 'Field identifier'
+      },
+      layout: { col: { xs: 12, sm: 12, md: '4' } }
     },
     {
       name: 'dependent.operator',
       type: 'select',
       label: 'Dependency operator',
-      layout: { col: { md: '2' } },
+      layout: { col: { xs: 12, sm: 5, md: '3' } },
       dependent: { on: 'dependent.on' }, // oh yes :)
       options: ['', 'in', 'gt', 'gte', 'lt', 'lte', 'is', 'isnt'],
       optionNames: [
@@ -82,13 +84,16 @@ const config = [
       name: 'dependent.values',
       type: 'text',
       label: 'Dependency value',
-      layout: { col: { md: '6' } },
-      dependent: { on: 'dependent.operator', operator: 'isnt', values: '' },
+      layout: { col: { xs: 12, sm: 7, md: '5' } },
+      dependent: {
+        on: 'dependent.operator',
+        operator: 'in',
+        values: ['in', 'gt', 'gte', 'lt', 'lte', 'is', 'isnt']
+      },
       attributes: {
         placeholder: 'Leave blank if value does not matter'
       }
     }
-  ]
 ]
 
 export default Dependent

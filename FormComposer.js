@@ -29,21 +29,15 @@ class FormComposer extends Component {
   }
   renderElements (props) {
     const { elements, library, ...additionalProps } = props
-    return elements.map((element, key) => {
-      if (isArray(element)) {
-        return (
-          <Row key={`row-${key}`}>
-            {element.map(e => renderElements(e, library, additionalProps))}
-          </Row>
-        )
-      } else return renderElements(element, library, additionalProps)
-    })
+    return elements.map((element, key) =>
+      renderElements(element, library, additionalProps)
+    )
   }
   render () {
     const { formAttributes } = this.props
     return (
       <Form onSubmit={this._onSubmit} {...formAttributes}>
-        {this.renderElements(this.props)}
+        <Row>{this.renderElements(this.props)}</Row>
         {this.props.children}
       </Form>
     )
