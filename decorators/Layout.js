@@ -1,5 +1,6 @@
 import React from 'react'
 import { Col } from 'reactstrap'
+import { includes } from 'lodash'
 
 const LayoutDecorator = WrappedComponent => props => {
   if (props.element.layout) {
@@ -33,6 +34,12 @@ const optionNames = [
 
 const config = [
   {
+    key: 'layout',
+    type: 'divider',
+    layout: { col: { xs: '12' } }
+  },
+  {
+    key: 'layout.xs',
     name: 'layout.col.xs',
     type: 'select',
     label: 'Column width: Phone',
@@ -41,6 +48,7 @@ const config = [
     layout
   },
   {
+    key: 'layout.sm',
     name: 'layout.col.sm',
     type: 'select',
     label: 'Tablet',
@@ -49,6 +57,7 @@ const config = [
     layout
   },
   {
+    key: 'layout.md',
     name: 'layout.col.md',
     type: 'select',
     label: 'Laptop',
@@ -57,6 +66,7 @@ const config = [
     layout
   },
   {
+    key: 'layout.lg',
     name: 'layout.col.lg',
     type: 'select',
     label: 'Desktop',
@@ -65,6 +75,8 @@ const config = [
     layout
   }
 ]
+
+const filter = key => !includes([], key)
 
 export default LayoutDecorator
 export { config }

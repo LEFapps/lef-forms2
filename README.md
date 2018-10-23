@@ -17,13 +17,15 @@ Let's assume the form is configured with a hardcoded list of elements:
 ```JSX
 const formElements = [
   {
+    key: 'unique_key_foo', // forms built with FormEditor are automatically taken care of
     name: 'foo',
-    type: 'textarea'
+    type: 'textarea',
     attributes: {
       rows: 5,
     }
   },
   {
+    key: 'unique_key_bar',
     name: 'bar',
     type: 'text'
   },
@@ -31,7 +33,7 @@ const formElements = [
 
 const groupedFormEls = [
   {}, // elements as above
-  { type: 'divider' }, // adds 'hr'
+  { type: 'divider', key: 'divider_1' }, // adds 'hr'
   {}, // elements as above
 ]
 
@@ -84,8 +86,8 @@ Blueprint of an element:
 
 ```JSON
 {
+  "key" : "unique key: only needed if name can cause identical keys (e.g. when using dependent) OR when using form editor",
   "name" : "name.supports.nesting",
-  "key" : "only needed if name can cause identical keys (e.g. when using dependent)",
   "type" : "text",
   "attributes" : {
     "placeholder" : "placeholder",
@@ -184,22 +186,22 @@ class TextComponent extends Component {
 }
 
 const config = [
-      {
-        name: "name",
-        type: "text",
-        label: "Field name",
-        attributes: {
-          placeholder: "Technical name for field"
-        },
-        validation: { required: true },
-        layout: {col: {md:"12"}},
-      },
-      {
-        name: "attributes.placeholder",
-        type: "text",
-        label: "Placeholder",
-        layout: {col: { md:"12" }}
-      }
+  {
+    name: "name",
+    type: "text",
+    label: "Field name",
+    attributes: {
+      placeholder: "Technical name for field"
+    },
+    validation: { required: true },
+    layout: { col: { md: "12" } },
+  },
+  {
+    name: "attributes.placeholder",
+    type: "text",
+    label: "Placeholder",
+    layout: { col: { md: "12" } }
+  }
 ]
 
 export default TextComponent

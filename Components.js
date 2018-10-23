@@ -5,8 +5,8 @@ import { isArray } from 'lodash'
 import GenericInputNoChildren from './components/GenericInputNoChildren'
 
 const library = new Library([
-  // ['divider', './components/Divider'],
-  // ['infobox', './components/InfoBox'],
+  ['divider', './components/Divider'],
+  ['infobox', './components/InfoBox'],
   ['textarea', './components/Textarea'],
   ['text', './components/Text'],
   ['checkbox', './components/Checkbox'],

@@ -18,6 +18,7 @@ Checkbox.displayName = 'Checkbox'
 
 const config = [
   {
+    key: 'checkbox',
     name: 'name',
     type: 'text',
     label: 'Field identifier',
@@ -28,6 +29,7 @@ const config = [
     layout: { col: { xs: '12', sm: 8 } }
   },
   {
+    key: 'checkbox.value',
     name: 'value',
     type: 'text',
     label: 'Value',

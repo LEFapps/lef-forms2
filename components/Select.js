@@ -21,6 +21,7 @@ const Select = props => {
 
 const config = [
   {
+    key: 'select',
     name: 'name',
     type: 'text',
     label: 'Field identifier',
@@ -31,6 +32,7 @@ const config = [
     layout: { col: { xs: 12 } }
   },
   {
+    key: 'select.options',
     name: 'options',
     type: 'textarea',
     label: 'Values in background',
@@ -43,6 +45,7 @@ const config = [
     required: true
   },
   {
+    key: 'select.optionNames',
     name: 'optionNames',
     type: 'textarea',
     label: 'Display names for Values',

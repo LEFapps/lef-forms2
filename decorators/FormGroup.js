@@ -27,6 +27,7 @@ const FormGroupDecorator = WrappedComponent => props => {
 
 const config = [
   {
+    key: 'label',
     name: 'label',
     type: 'textarea',
     label: 'Field label or introduction',
@@ -37,5 +38,7 @@ const config = [
 // Configuration of label is put in front
 const combine = flip(union)
 
+const filter = key => !includes(['divider', 'infobox'], key)
+
 export default FormGroupDecorator
-export { config, combine }
+export { config, combine, filter }

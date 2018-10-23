@@ -1,17 +1,13 @@
 import React, { Component } from 'react'
+import { Random } from 'meteor/random'
 import { Form, Row } from 'reactstrap'
 import { map, isArray } from 'lodash'
 
 const renderElements = (element, library, additionalProps) => {
   if (library.has(element.type)) {
     let Component = library.get(element.type).component
-    return (
-      <Component
-        key={`${element.name}${element.key || ''}`}
-        element={element}
-        {...additionalProps}
-      />
-    )
+    const key = `${element.name}${element.key || Random.id()}`
+    return <Component key={key} element={element} {...additionalProps} />
   } else {
     console.log(`Unknown element type: ${element.type}`)
     return null

@@ -36,6 +36,7 @@ GenericInputNoChildren.displayName = 'Input'
 
 const config = [
   {
+    key: 'input',
     name: 'name',
     type: 'text',
     label: 'Field identifier',
@@ -46,6 +47,7 @@ const config = [
     layout: { col: { xs: '12', sm: 6 } }
   },
   {
+    key: 'input.placeholder',
     name: 'attributes.placeholder',
     type: 'text',
     label: 'Placeholder',

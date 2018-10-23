@@ -16,6 +16,7 @@ const TextComponent = props => {
 
 const config = [
   {
+    key: 'text',
     name: 'name',
     type: 'text',
     label: 'Field identifier',
@@ -26,6 +27,7 @@ const config = [
     layout: { col: { xs: 12, sm: 6 } }
   },
   {
+    key: 'text.placeholder',
     name: 'attributes.placeholder',
     type: 'text',
     label: 'Placeholder',

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Random } from 'meteor/random'
 import { FormComposer } from './FormComposer'
 import {
   Container,
@@ -14,9 +15,20 @@ import {
   CardText,
   CardHeader,
   CardFooter,
-  UncontrolledCollapse
+  UncontrolledCollapse,
+  UncontrolledButtonDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
 } from 'reactstrap'
-import { flow, isArray, capitalize, upperCase, includes } from 'lodash'
+import {
+  flow,
+  isArray,
+  capitalize,
+  upperCase,
+  includes,
+  cloneDeep
+} from 'lodash'
 import reformed from './reformed'
 
 class ElementEditor extends Component {
@@ -46,34 +58,63 @@ const EditorCard = ({
   element,
   elements,
   setElementModel,
-  onRemove
+  onRemove,
+  onMoveElement,
+  onDuplicate,
+  amount
 }) => {
   const toggle = `toggle-element-${index}-${element.type}`
   return (
     <Card style={{ margin: '1rem 0' }}>
-      <CardHeader id={toggle}>
-        <CardTitle>{element.label || '_'}</CardTitle>
+      <CardHeader>
+        <ButtonGroup className={'float-right'} style={{ zIndex: 20 }}>
+          <Button outline color={'danger'} onClick={() => onRemove(element)}>
+            ✕
+          </Button>
+          <Button
+            outline
+            color={'success'}
+            onClick={() => onDuplicate(element)}
+          >
+            ⧉
+          </Button>
+          <Button
+            outline
+            color={'info'}
+            onClick={() => onMoveElement(element, -1)}
+            disabled={index == 0}
+          >
+            △
+          </Button>
+          <Button
+            outline
+            color={'info'}
+            onClick={() => onMoveElement(element, 1)}
+            disabled={index == amount - 1}
+          >
+            ▽
+          </Button>
+        </ButtonGroup>
+        <CardTitle id={toggle} style={{ cursor: 'pointer' }}>
+          {element.label || <em>_label</em>}
+        </CardTitle>
         <CardSubtitle>
           <small className='text-muted'>
             <Badge color='light'>{upperCase(element.type)}</Badge>{' '}
-            {element.name || '_'}
+            {element.name || <em>_identifier</em>}
           </small>
         </CardSubtitle>
       </CardHeader>
       <UncontrolledCollapse toggler={`#${toggle}`}>
         <CardBody>
           <ElementEditor
+            el={element}
             library={library}
             elements={elements}
             initialModel={element}
             setElement={setElementModel}
           />
         </CardBody>
-        <CardFooter>
-          <Button color={'danger'} onClick={() => onRemove(element)}>
-            Remove
-          </Button>
-        </CardFooter>
       </UncontrolledCollapse>
     </Card>
   )
@@ -87,6 +128,8 @@ class FormEditor extends Component {
     this.save = this.save.bind(this)
     this.addElement = this.addElement.bind(this)
     this.removeElement = this.removeElement.bind(this)
+    this.moveElement = this.moveElement.bind(this)
+    this.duplicateElement = this.duplicateElement.bind(this)
   }
   setElement (index, element) {
     this.setState(prevstate => {
@@ -100,51 +143,88 @@ class FormEditor extends Component {
   }
   addElement (type) {
     this.setState(prevstate => {
-      prevstate.elements.push({ type })
+      prevstate.elements.push({ type, key: Random.id() })
       return {
         elements: prevstate.elements
       }
     })
   }
+  duplicateElement (element) {
+    this.setState(prevstate => {
+      const index = prevstate.elements.indexOf(element)
+      const duplicate = cloneDeep(prevstate.elements[index])
+      if (duplicate) {
+        if (duplicate.name) duplicate.name += '_copy'
+        if (duplicate.label) duplicate.label += ' (copy)'
+        if (duplicate.key) duplicate.key = Random.id()
+        prevstate.elements.splice(index + 1, 0, duplicate)
+        return { elements: prevstate.elements }
+      } else {
+        return { elements: prevstate.elements }
+        console.error(`Element not found (${element.name}, ${index}).`)
+      }
+    })
+  }
+  moveElement (element, direction) {
+    this.setState(prevstate => {
+      const index = prevstate.elements.indexOf(element)
+      prevstate.elements.splice(index, 1)
+      prevstate.elements.splice(index + direction, 0, element)
+      return { elements: prevstate.elements }
+    })
+  }
+  moveElementUp (element) {
+    this.moveElement(element, -1)
+  }
+  moveElementDown (element) {
+    this.moveElement(element, 1)
+  }
   removeElement (element) {
     if (
       confirm(`Are you sure you want to remove the element "${element.name}"`)
     ) {
-      const index = this.state.elements.indexOf(element)
-      if (index >= 0) {
-        this.setState(prevstate => {
+      this.setState(prevstate => {
+        const index = this.state.elements.indexOf(element)
+        if (index >= 0) {
           prevstate.elements.splice(index, 1)
           return {
             elements: prevstate.elements
           }
-        })
-      } else console.error(`Element not found (${element.name}, ${index}).`)
+        } else console.error(`Element not found (${element.name}, ${index}).`)
+      })
     }
   }
   render () {
     const { library } = this.props
     const { previewLibrary = library } = this.props
     const ReformedFormComposer = reformed()(FormComposer)
+    const totalElements = this.state.elements.length
     return (
       <Container>
         <ButtonMenu library={library} addElement={this.addElement} />
         {this.state.elements.map((element, index) => {
-          const elements = library.get(element.type).config
-          const setElementModel = el => {
-            this.setElement(index, el)
-            return el
-          }
-          return (
-            <EditorCard
-              library={library}
-              index={index}
-              element={element}
-              elements={elements}
-              setElementModel={setElementModel}
-              onRemove={this.removeElement}
-              key={`element-${index}`}
-            />
-          )
+          if (library.has(element.type)) {
+            const elements = library.get(element.type).config
+            // add dynamic dependency list here
+            const setElementModel = el => {
+              this.setElement(index, el)
+              return el
+            }
+            return (
+              <EditorCard
+                library={library}
+                index={index}
+                amount={totalElements}
+                element={element}
+                elements={elements}
+                setElementModel={setElementModel}
+                onRemove={this.removeElement}
+                onDuplicate={this.duplicateElement}
+                onMoveElement={this.moveElement}
+                key={`element-${element.key}`}
+              />
+            )
+          } else return null
         })}
         <Row>
           <Col md={12}>
@@ -157,7 +237,6 @@ class FormEditor extends Component {
             <ReformedFormComposer
               library={previewLibrary}
               elements={this.state.elements}
-              formAttributes={{ className: 'row' }}
             />
           </Col>
         </Row>
@@ -168,15 +247,23 @@ class FormEditor extends Component {
 
 const ButtonMenu = props => {
   return (
-    <ButtonGroup>
-      {Array.from(props.library.keys()).map(type => {
-        return (
-          <Button key={`add-${type}`} onClick={() => props.addElement(type)}>
-            {capitalize(type)}
-          </Button>
-        )
-      })}
-    </ButtonGroup>
+    <UncontrolledButtonDropdown>
+      <DropdownToggle caret>Add an Element&nbsp;</DropdownToggle>
+      <DropdownMenu>
+        <ButtonGroup vertical>
+          {Array.from(props.library.keys()).map(type => {
+            return (
+              <DropdownItem
+                key={`add-${type}`}
+                onClick={() => props.addElement(type)}
+              >
+                {capitalize(type)}
+              </DropdownItem>
+            )
+          })}
+        </ButtonGroup>
+      </DropdownMenu>
+    </UncontrolledButtonDropdown>
   )
 }
 

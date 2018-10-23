@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormFeedback } from 'reactstrap'
-import { get } from 'lodash'
+import { get, includes } from 'lodash'
 
 const Validate = WrappedComponent => props => {
   if (get(props.errors, props.element.name)) {
@@ -11,7 +11,7 @@ const Validate = WrappedComponent => props => {
     return (
       <>
         <WrappedComponent {...xProps} attributes={attributes} />
-        { description ? <FormFeedback>{description}</FormFeedback> : null }
+        {description ? <FormFeedback>{description}</FormFeedback> : null}
       </>
     )
   } else {
@@ -21,6 +21,12 @@ const Validate = WrappedComponent => props => {
 
 const config = [
   {
+    key: 'validate',
+    type: 'divider',
+    layout: { col: { xs: 12 } }
+  },
+  {
+    key: 'validate.required',
     name: 'required',
     type: 'checkbox',
     label: 'Required',
@@ -28,5 +34,7 @@ const config = [
   }
 ]
 
+const filter = key => !includes(['divider', 'infobox'], key)
+
 export default Validate
-export { config }
+export { config, filter }

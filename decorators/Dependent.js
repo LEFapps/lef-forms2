@@ -4,7 +4,8 @@ import {
   isEmpty,
   isUndefined,
   castArray,
-  intersection
+  intersection,
+  includes
 } from 'lodash'
 
 const dependency = ({ on, operator, values }) => model => {
@@ -52,49 +53,58 @@ const Dependent = WrappedComponent => props => {
 }
 
 const config = [
-  { type: 'divider' },
-    {
-      name: 'dependent.on',
-      type: 'text',
-      label: 'Dependent on field:',
-      attributes: {
-        placeholder: 'Field identifier'
-      },
-      layout: { col: { xs: 12, sm: 12, md: '4' } }
+  {
+    key: 'dependent',
+    type: 'divider',
+    layout: { col: { xs: 12 } }
+  },
+  {
+    key: 'dependent.on',
+    name: 'dependent.on',
+    type: 'text',
+    label: 'Dependent on field:',
+    attributes: {
+      placeholder: 'Field identifier'
     },
-    {
-      name: 'dependent.operator',
-      type: 'select',
-      label: 'Dependency operator',
-      layout: { col: { xs: 12, sm: 5, md: '3' } },
-      dependent: { on: 'dependent.on' }, // oh yes :)
-      options: ['', 'in', 'gt', 'gte', 'lt', 'lte', 'is', 'isnt'],
-      optionNames: [
-        'Geen',
-        'field(s) in [value(s)]',
-        'source > [value]',
-        'source ≥ {value]',
-        'source < [value]',
-        'source ≤ [value]',
-        'source IS [value]',
-        'source IS NOT [value]'
-      ]
+    layout: { col: { xs: 12, sm: 12, md: '4' } }
+  },
+  {
+    key: 'dependent.operator',
+    name: 'dependent.operator',
+    type: 'select',
+    label: 'Dependency operator',
+    layout: { col: { xs: 12, sm: 5, md: '3' } },
+    dependent: { on: 'dependent.on' }, // oh yes :)
+    options: ['', 'in', 'gt', 'gte', 'lt', 'lte', 'is', 'isnt'],
+    optionNames: [
+      'None',
+      'Field in [value(s)]',
+      'Source > [value]',
+      'Source ≥ {value]',
+      'Source < [value]',
+      'Source ≤ [value]',
+      'Source IS [value]',
+      'Source IS NOT [value]'
+    ]
+  },
+  {
+    key: 'dependent.values',
+    name: 'dependent.values',
+    type: 'text',
+    label: 'Dependency value',
+    layout: { col: { xs: 12, sm: 7, md: '5' } },
+    dependent: {
+      on: 'dependent.operator',
+      operator: 'in',
+      values: ['in', 'gt', 'gte', 'lt', 'lte', 'is', 'isnt']
     },
-    {
-      name: 'dependent.values',
-      type: 'text',
-      label: 'Dependency value',
-      layout: { col: { xs: 12, sm: 7, md: '5' } },
-      dependent: {
-        on: 'dependent.operator',
-        operator: 'in',
-        values: ['in', 'gt', 'gte', 'lt', 'lte', 'is', 'isnt']
-      },
-      attributes: {
-        placeholder: 'Leave blank if value does not matter'
-      }
+    attributes: {
+      placeholder: 'Blank unless value matters'
     }
+  }
 ]
+
+const filter = key => !includes([], key)
 
 export default Dependent
 export { config }
