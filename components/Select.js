@@ -29,29 +29,16 @@ const config = [
       placeholder: 'Technical name for field'
     },
     required: true,
-    layout: { col: { xs: 12 } }
-  },
-  {
-    key: 'select.options',
-    name: 'options',
-    type: 'textarea',
-    label: 'Values in background',
-    layout: { col: { xs: 6 } },
-    attributes: {
-      rows: 5,
-      placeholder: 'one item per line',
-      style: { whiteSpace: 'nowrap' }
-    },
-    required: true
+    layout: { col: { xs: 12, md: 4 } }
   },
   {
     key: 'select.optionNames',
     name: 'optionNames',
     type: 'textarea',
-    label: 'Display names for Values',
-    layout: { col: { xs: 6 } },
+    label: 'Values',
+    layout: { col: { xs: 12, md: 8 } },
     attributes: {
-      rows: 5,
+      rows: 8,
       placeholder: 'one item per line',
       style: { whiteSpace: 'nowrap' }
     },

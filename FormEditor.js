@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Random } from 'meteor/random'
 import { FormComposer } from './FormComposer'
+import reformed from './reformed'
+import { prepareForEditor, prepareForSaving } from './editor/dataTransformer'
 import {
   Container,
   Row,
@@ -29,7 +31,6 @@ import {
   includes,
   cloneDeep
 } from 'lodash'
-import reformed from './reformed'
 
 class ElementEditor extends Component {
   constructor (props) {
@@ -68,12 +69,18 @@ const EditorCard = ({
     <Card style={{ margin: '1rem 0' }}>
       <CardHeader>
         <ButtonGroup className={'float-right'} style={{ zIndex: 20 }}>
-          <Button outline color={'danger'} onClick={() => onRemove(element)}>
+          <Button
+            outline
+            color={'danger'}
+            title={'Remove Element'}
+            onClick={() => onRemove(element)}
+          >
             ✕
           </Button>
           <Button
             outline
             color={'success'}
+            title={'Duplicate Element'}
             onClick={() => onDuplicate(element)}
           >
             ⧉
@@ -81,6 +88,7 @@ const EditorCard = ({
           <Button
             outline
             color={'info'}
+            title={'Move Element Up'}
             onClick={() => onMoveElement(element, -1)}
             disabled={index == 0}
           >
@@ -89,6 +97,7 @@ const EditorCard = ({
           <Button
             outline
             color={'info'}
+            title={'Move Element Down'}
             onClick={() => onMoveElement(element, 1)}
             disabled={index == amount - 1}
           >
@@ -123,7 +132,11 @@ const EditorCard = ({
 class FormEditor extends Component {
   constructor (props) {
     super(props)
-    this.state = { elements: this.props.initialModel || [] }
+    this.state = {
+      elements: this.props.initialModel
+        ? this.props.initialModel.map(e => prepareForEditor(e))
+        : []
+    }
     this.setElement = this.setElement.bind(this)
     this.save = this.save.bind(this)
     this.addElement = this.addElement.bind(this)
@@ -133,13 +146,13 @@ class FormEditor extends Component {
   }
   setElement (index, element) {
     this.setState(prevstate => {
-      prevstate.elements[index] = element
+      prevstate.elements[index] = prepareForEditor(element)
       return { elements: prevstate.elements }
     })
     return element
   }
   save () {
-    this.props.onSubmit(this.state.elements)
+    this.props.onSubmit(this.state.elements.map(e => prepareForSaving(e)))
   }
   addElement (type) {
     this.setState(prevstate => {
@@ -205,7 +218,6 @@ class FormEditor extends Component {
         {this.state.elements.map((element, index) => {
           if (library.has(element.type)) {
             const elements = library.get(element.type).config
-            // add dynamic dependency list here
             const setElementModel = el => {
               this.setElement(index, el)
               return el
@@ -236,7 +248,9 @@ class FormEditor extends Component {
             <h3>Preview</h3>
             <ReformedFormComposer
               library={previewLibrary}
-              elements={this.state.elements}
+              elements={cloneDeep(this.state.elements).map(e =>
+                prepareForSaving(e)
+              )}
             />
           </Col>
         </Row>

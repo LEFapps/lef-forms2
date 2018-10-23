@@ -59,7 +59,7 @@ class DecoratorLibrary extends Library {
           const componentConfig = grab(target, 'config', isArray, targetKey)
           target.config = combine(componentConfig, decoratorConfig)
         } else {
-          console.log(`${sourceKey} is not interested in ${targetKey}`)
+          //          console.log(`${sourceKey} is not interested in ${targetKey}`)
         }
       })
     })
