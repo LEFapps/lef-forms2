@@ -1,6 +1,6 @@
 import React from 'react'
 import GenericInput from './GenericInput'
-import { zip, isArray } from 'lodash'
+import { zip, isArray, get } from 'lodash'
 
 const Select = props => {
   const { element } = props
