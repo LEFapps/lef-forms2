@@ -44,7 +44,7 @@ class DecoratorLibrary extends Library {
       const decorator = grab(source, 'decorator', isFunction, sourceKey)
       const combine = grab(source, 'combine', isFunction, sourceKey)
       const filter = grab(source, 'filter', isFunction, sourceKey)
-      const decoratorConfig = grab(source, 'config', isArray, sourceKey)
+      const decoratorConfig = grab(source, 'config', isFunction, sourceKey)
       componentLibrary.forEach((target, targetKey) => {
         // is this decorator interested?
         if (filter(targetKey)) {
@@ -56,8 +56,8 @@ class DecoratorLibrary extends Library {
           target.component = decorator(target.component)
           target.component.displayName = `${sourceKey}(${originalDisplayName})`
           // combine configurations
-          const componentConfig = grab(target, 'config', isArray, targetKey)
-          target.config = combine(componentConfig, decoratorConfig)
+          const componentConfig = grab(target, 'config', isFunction, targetKey)
+          target.config = () => combine(componentConfig(), decoratorConfig())
         } else {
           //          console.log(`${sourceKey} is not interested in ${targetKey}`)
         }

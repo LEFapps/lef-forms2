@@ -24,6 +24,7 @@ import {
   DropdownItem
 } from 'reactstrap'
 import {
+  size,
   flow,
   isArray,
   capitalize,
@@ -105,7 +106,9 @@ const EditorCard = ({
           </Button>
         </ButtonGroup>
         <CardTitle id={toggle} style={{ cursor: 'pointer' }}>
-          {element.label || <em>_label</em>}
+          {(size(element.label) > 64
+            ? element.label.substr(0, 50) + '…'
+            : element.label) || <em>_label</em>}
         </CardTitle>
         <CardSubtitle>
           <small className='text-muted'>
@@ -217,7 +220,7 @@ class FormEditor extends Component {
         <ButtonMenu library={library} addElement={this.addElement} />
         {this.state.elements.map((element, index) => {
           if (library.has(element.type)) {
-            const elements = library.get(element.type).config
+            const elements = library.get(element.type).config()
             const setElementModel = el => {
               this.setElement(index, el)
               return el

@@ -8,6 +8,7 @@ import Textarea from './components/Textarea'
 import TextInput from './components/Text'
 import Checkbox from './components/Checkbox'
 import Select from './components/Select'
+import SelectCollection from './components/SelectCollection'
 import Divider from './components/Divider'
 import InfoBox from './components/InfoBox'
 
@@ -28,7 +29,15 @@ export {
   DefaultDecorators
 }
 
-export { Textarea, TextInput, Checkbox, Select, InfoBox, Divider }
+export {
+  Textarea,
+  TextInput,
+  Checkbox,
+  Select,
+  SelectCollection,
+  InfoBox,
+  Divider
+}
 
 export {
   FormGroupDecorator,

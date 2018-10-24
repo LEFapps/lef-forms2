@@ -16,7 +16,7 @@ const Checkbox = props => {
 
 Checkbox.displayName = 'Checkbox'
 
-const config = [
+const config = () => [
   {
     key: 'checkbox',
     name: 'name',

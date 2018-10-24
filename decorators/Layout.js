@@ -32,7 +32,7 @@ const optionNames = [
   '1 / 12'
 ]
 
-const config = [
+const config = () => [
   {
     key: 'layout',
     type: 'divider',

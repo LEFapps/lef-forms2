@@ -14,7 +14,7 @@ const TextComponent = props => {
   )
 }
 
-const config = [
+const config = () => [
   {
     key: 'text',
     name: 'name',

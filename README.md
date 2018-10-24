@@ -187,20 +187,22 @@ class TextComponent extends Component {
 
 const config = [
   {
+    kay: "name",
     name: "name",
     type: "text",
     label: "Field name",
     attributes: {
       placeholder: "Technical name for field"
     },
-    validation: { required: true },
-    layout: { col: { md: "12" } },
+    required: true,
+    layout: { col: { xs: "12" } },
   },
   {
+    kay: "attributes.placeholder",
     name: "attributes.placeholder",
     type: "text",
     label: "Placeholder",
-    layout: { col: { md: "12" } }
+    layout: { col: { xs: "12" } }
   }
 ]
 
@@ -240,6 +242,7 @@ const FormGroupDecorator = WrappedComponent => props => (
 
 const config = [
   {
+    key: "label",
     name: "label",
     type: "textarea",
     label: "Field label or introduction",
@@ -249,8 +252,9 @@ const config = [
 
 // Configuration of label is put in front
 const combine = _.flip(_.union)
+
 // we're only interested in certain components:
-const filter = (componentType)=> _.includes(["textarea","text"],componentType)
+const filter = componentType => _.includes(["textarea", "text"], componentType)
 
 export default FormGroupDecorator
 export { config, combine, filter }
@@ -279,6 +283,7 @@ To make use of the new `label` functionality, we can add them to the element con
 ```JSX
 const formElements = [
   {
+    key: 'foo',
     name: 'foo',
     label: 'Fill your foo',
     type: 'textarea',
@@ -287,6 +292,7 @@ const formElements = [
     },
   },
   {
+    key: 'bar',
     name: 'bar',
     label: 'Add your bar',
     type: 'text'
@@ -297,3 +303,41 @@ const formElements = [
 Note that the `props` that are passed to the decorator include both `element` configuration, as well as the `model`. This means the decorator could easily respond to the current values in _any part_ of the form.
 
 If you are creating a large component and/or decorator library, it might be worthwhile to have a look at `Components.js` and `Decorators.js` for ideas on how to bring the together.
+
+## Special Components
+
+### select-collection
+
+You can create a select with options gathered from a collection.
+
+```JSON
+{
+  "key" : "selectCollection.orgs",
+  "name" : "organization",
+  "label" : "Organization",
+  "type" : "select-collection",
+  "subscription" : "userOrg", // subscription name
+  "fields" : [ // fields to show as option
+      "name", // if populated, this field is used for sorting
+      "address.city"
+  ],
+  "defaultOptionNames" : [ // extra options added before collection options
+      "New organization"
+  ],
+  "defaultOptions" : [ // values for extra options
+    "~new-organization"
+  ]
+}
+```
+
+Before the form can access documents from these collections, you should declare them globally like shown below. **Import this file at least on the client.** Collections declared here are available in the form Editor.
+
+```JS
+const collections = [
+  { subscription: 'forms', collection: Forms },
+  { /* etc. */ }
+]
+
+if (Meteor.isClient) window.myCollections = collections
+if (Meteor.isServer) global.myCollections = collections
+```

@@ -19,7 +19,7 @@ const Validate = WrappedComponent => props => {
   }
 }
 
-const config = [
+const config = () => [
   {
     key: 'validate',
     type: 'divider',

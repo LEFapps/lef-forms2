@@ -6,7 +6,7 @@ const DividerComponent = props => {
   return <hr {...elementAttributes} {...propsAttributes} />
 }
 
-const config = [
+const config = () => [
   {
     key: 'divider',
     name: 'divider',

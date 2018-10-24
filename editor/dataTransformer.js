@@ -1,22 +1,40 @@
 import { isArray, kebabCase } from 'lodash'
 
-const prepareSelect = (element, saving) => {
-  if (saving) {
-    element.optionNames = element.optionNames.split('\n')
-    element.options = element.optionNames.map(o => `~${kebabCase(o)}`)
-  } else {
-    if (isArray(element.optionNames)) {
-      element.options = element.optionNames.map(o => `~${kebabCase(o)}`)
-      element.optionNames = element.optionNames.join('\n')
-    }
-  }
-  return element
-}
-
 const transformOnType = (element, saving) => {
   switch (element.type) {
     case 'select':
-      element = prepareSelect(element, saving)
+      if (saving) {
+        element.optionNames = element.optionNames
+          ? element.optionNames.split('\n')
+          : []
+        element.options = element.optionNames.map(o => `~${kebabCase(o)}`)
+      } else {
+        if (isArray(element.optionNames)) {
+          element.options = element.optionNames.map(o => `~${kebabCase(o)}`)
+          element.optionNames = element.optionNames.join('\n')
+        }
+      }
+      break
+    case 'select-collection':
+      if (saving) {
+        delete element.options
+        delete element.optionNames
+        element.fields = element.fields ? element.fields.split('\n') : []
+        element.defaultOptionNames = element.defaultOptionNames
+          ? element.defaultOptionNames.split('\n')
+          : []
+        element.defaultOptions = element.defaultOptionNames.map(
+          o => `~${kebabCase(o)}`
+        )
+      } else {
+        if (isArray(element.defaultOptionNames)) {
+          element.defaultOptions = element.defaultOptionNames.map(
+            o => `~${kebabCase(o)}`
+          )
+          element.defaultOptionNames = element.defaultOptionNames.join('\n')
+        }
+        if (isArray(element.fields)) element.fields = element.fields.join('\n')
+      }
       break
   }
   return element

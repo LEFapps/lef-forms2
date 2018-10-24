@@ -1,5 +1,5 @@
 import { DecoratorLibrary } from './Library'
-import { union, stubTrue, isFunction, isArray } from 'lodash'
+import { union, stubTrue, stubArray, isFunction, isArray } from 'lodash'
 
 /* Note: the sequence here determines the sequence
  * in which they are applied in EasyForm!
@@ -16,7 +16,9 @@ library.forEach((path, name) => {
   const decorator = require(path)
   library.set(name, {
     decorator: decorator.default,
-    config: isArray(decorator.config) ? decorator.config : [],
+    config: isArray(isFunction(decorator.config) ? decorator.config() : null)
+      ? decorator.config
+      : stubArray,
     combine: isFunction(decorator.combine) ? decorator.combine : union,
     filter: isFunction(decorator.filter) ? decorator.filter : stubTrue
   })

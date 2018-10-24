@@ -52,7 +52,7 @@ const Dependent = WrappedComponent => props => {
   return <WrappedComponent {...props} />
 }
 
-const config = [
+const config = () => [
   {
     key: 'dependent',
     type: 'divider',

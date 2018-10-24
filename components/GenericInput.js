@@ -34,7 +34,7 @@ const GenericInputNoChildren = ({ bindInput, element, attributes }) => {
 GenericInput.displayName = 'Input'
 GenericInputNoChildren.displayName = 'Input'
 
-const config = [
+const config = () => [
   {
     key: 'input',
     name: 'name',

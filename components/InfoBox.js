@@ -6,14 +6,14 @@ const InfoBoxComponent = props => {
   const { attributes: elementAttributes } = element
   return (
     <div {...elementAttributes} {...propsAttributes}>
-      <Text content={element.infobox} />
+      <Text content={element.label} />
     </div>
   )
 }
 
-const config = [
+const config = () => [
   {
-    name: 'infobox',
+    name: 'label',
     type: 'textarea',
     key: 'infobox',
     label: 'Text contents',

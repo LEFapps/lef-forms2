@@ -8,18 +8,23 @@ const Select = props => {
     ? element.optionNames
     : element.options
   const pairs = zip(names, element.options)
-  return (
-    <GenericInput {...props}>
-      {pairs.map((option, i) => (
-        <option key={`${element.name}-option-${i}`} value={option[1]}>
-          {option[0]}
-        </option>
-      ))}
-    </GenericInput>
-  )
+  if (get(element, 'attributes.multiple', false) == 'checkbox') {
+    return <SelectMulti {...props} />
+  } else {
+    return (
+      <GenericInput {...props}>
+        <option key={`${element.name}-option-default`}>{'–'}</option>
+        {pairs.map((option, i) => (
+          <option key={`${element.name}-option-${i}`} value={option[1]}>
+            {option[0]}
+          </option>
+        ))}
+      </GenericInput>
+    )
+  }
 }
 
-const config = [
+const config = () => [
   {
     key: 'select',
     name: 'name',
@@ -39,7 +44,7 @@ const config = [
     layout: { col: { xs: 12, md: 8 } },
     attributes: {
       rows: 8,
-      placeholder: 'one item per line',
+      placeholder: 'one\nitem\nper\nline',
       style: { whiteSpace: 'nowrap' }
     },
     required: true
