@@ -16,6 +16,11 @@ const TextComponent = props => {
 
 const config = () => [
   {
+    key: 'text.divider',
+    type: 'divider',
+    layout: { col: { xs: '12' } }
+  },
+  {
     key: 'text',
     name: 'name',
     type: 'text',

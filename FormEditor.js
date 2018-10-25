@@ -25,8 +25,11 @@ import {
 } from 'reactstrap'
 import {
   size,
+  get,
   flow,
+  find,
   isArray,
+  isPlainObject,
   capitalize,
   upperCase,
   includes,
@@ -54,88 +57,116 @@ class ElementEditor extends Component {
   }
 }
 
-const EditorCard = ({
-  library,
-  index,
-  element,
-  elements,
-  setElementModel,
-  onRemove,
-  onMoveElement,
-  onDuplicate,
-  amount
-}) => {
-  const toggle = `toggle-element-${index}-${element.type}`
-  return (
-    <Card style={{ margin: '1rem 0' }}>
-      <CardHeader>
-        <ButtonGroup className={'float-right'} style={{ zIndex: 20 }}>
-          <Button
-            outline
-            color={'danger'}
-            title={'Remove Element'}
-            onClick={() => onRemove(element)}
-          >
-            ✕
-          </Button>
-          <Button
-            outline
-            color={'success'}
-            title={'Duplicate Element'}
-            onClick={() => onDuplicate(element)}
-          >
-            ⧉
-          </Button>
-          <Button
-            outline
-            color={'info'}
-            title={'Move Element Up'}
-            onClick={() => onMoveElement(element, -1)}
-            disabled={index == 0}
-          >
-            △
-          </Button>
-          <Button
-            outline
-            color={'info'}
-            title={'Move Element Down'}
-            onClick={() => onMoveElement(element, 1)}
-            disabled={index == amount - 1}
-          >
-            ▽
-          </Button>
-        </ButtonGroup>
-        <CardTitle id={toggle} style={{ cursor: 'pointer' }}>
-          {(size(element.label) > 64
-            ? element.label.substr(0, 50) + '…'
-            : element.label) || <em>_label</em>}
-        </CardTitle>
-        <CardSubtitle>
-          <small className='text-muted'>
-            <Badge color='light'>{upperCase(element.type)}</Badge>{' '}
-            {element.name || <em>_identifier</em>}
-          </small>
-        </CardSubtitle>
-      </CardHeader>
-      <UncontrolledCollapse toggler={`#${toggle}`}>
-        <CardBody>
-          <ElementEditor
-            el={element}
-            library={library}
-            elements={elements}
-            initialModel={element}
-            setElement={setElementModel}
-          />
-        </CardBody>
-      </UncontrolledCollapse>
-    </Card>
-  )
+class EditorCard extends Component {
+  constructor (props) {
+    super(props)
+  }
+  shouldComponentUpdate (nextProps, nextState) {
+    // performance gets really bad when not doing this!
+    const propsResult = JSON.stringify(this.props) != JSON.stringify(nextProps)
+    // const elementResult = this.props.element
+    console.log(
+      JSON.stringify(this.props.element),
+      JSON.stringify(nextProps.element)
+    )
+    return propsResult // || elementResult
+  }
+  render () {
+    const {
+      library,
+      index,
+      element,
+      elements,
+      setElementModel,
+      onRemove,
+      onMoveElement,
+      onDuplicate,
+      canMove
+    } = this.props
+    const toggle = `toggle-element-${index}-${element.type}`
+    const has = (element, field) => !!find(element, e => e.name == field)
+    const dependentOn = get(element, 'dependent.on')
+    return (
+      <Card
+        style={{ margin: '1rem 0', marginLeft: dependentOn ? '1rem' : '0' }}
+      >
+        <CardHeader>
+          <ButtonGroup className={'float-right'} style={{ zIndex: 20 }}>
+            <Button
+              outline
+              color={'danger'}
+              title={'Remove Element'}
+              onClick={() => onRemove(element)}
+            >
+              ✕
+            </Button>
+            <Button
+              outline
+              color={'success'}
+              title={'Duplicate Element'}
+              onClick={() => onDuplicate(element)}
+            >
+              ⧉
+            </Button>
+            <Button
+              outline
+              color={'info'}
+              title={'Move Element Up'}
+              onClick={() => onMoveElement(element, -1)}
+              disabled={!canMove(index, -1)}
+            >
+              △
+            </Button>
+            <Button
+              outline
+              color={'info'}
+              title={'Move Element Down'}
+              onClick={() => onMoveElement(element, 1)}
+              disabled={!canMove(index, 1)}
+            >
+              ▽
+            </Button>
+          </ButtonGroup>
+          <CardTitle id={toggle} style={{ cursor: 'pointer' }}>
+            {has(elements, 'label')
+              ? element.label && element.label.translate
+                ? element.label.translate
+                : (size(element.label) > 64
+                    ? element.label.substr(0, 50) + '…'
+                    : element.label) || <em>_label</em>
+              : element.type}
+          </CardTitle>
+          <CardSubtitle>
+            <small className='text-muted'>
+              <Badge color='light'>{upperCase(element.type)}</Badge>{' '}
+              {has(elements, 'name')
+                ? element.name || <em>_identifier</em>
+                : null}
+              {dependentOn ? `, depends on ${dependentOn}` : null}
+            </small>
+          </CardSubtitle>
+        </CardHeader>
+        <UncontrolledCollapse toggler={`#${toggle}`}>
+          <CardBody>
+            <ElementEditor
+              el={element}
+              library={library}
+              elements={elements}
+              initialModel={element}
+              setElement={setElementModel}
+            />
+          </CardBody>
+        </UncontrolledCollapse>
+      </Card>
+    )
+  }
 }
 
 class FormEditor extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      showPreview: true,
       elements: this.props.initialModel
         ? this.props.initialModel.map(e => prepareForEditor(e))
         : []
@@ -146,12 +177,15 @@ class FormEditor extends Component {
     this.removeElement = this.removeElement.bind(this)
     this.moveElement = this.moveElement.bind(this)
     this.duplicateElement = this.duplicateElement.bind(this)
+    this.showPreview = this.showPreview.bind(this)
+    this.showPreview = this.showPreview.bind(this)
   }
   setElement (index, element) {
     this.setState(prevstate => {
       prevstate.elements[index] = prepareForEditor(element)
       return { elements: prevstate.elements }
     })
+    this.showPreview(false)
     return element
   }
   save () {
@@ -164,6 +198,7 @@ class FormEditor extends Component {
         elements: prevstate.elements
       }
     })
+    this.showPreview(false)
   }
   duplicateElement (element) {
     this.setState(prevstate => {
@@ -180,6 +215,7 @@ class FormEditor extends Component {
         console.error(`Element not found (${element.name}, ${index}).`)
       }
     })
+    this.showPreview(false)
   }
   moveElement (element, direction) {
     this.setState(prevstate => {
@@ -188,6 +224,7 @@ class FormEditor extends Component {
       prevstate.elements.splice(index + direction, 0, element)
       return { elements: prevstate.elements }
     })
+    this.showPreview(false)
   }
   moveElementUp (element) {
     this.moveElement(element, -1)
@@ -208,13 +245,19 @@ class FormEditor extends Component {
           }
         } else console.error(`Element not found (${element.name}, ${index}).`)
       })
+      this.showPreview(false)
     }
+  }
+  showPreview (show = true) {
+    this.setState({ showPreview: show })
   }
   render () {
     const { library } = this.props
     const { previewLibrary = library } = this.props
     const ReformedFormComposer = reformed()(FormComposer)
     const totalElements = this.state.elements.length
+    const canMove = (index, dir) =>
+      dir < 0 ? index > 0 : index < totalElements - 1
     return (
       <Container>
         <ButtonMenu library={library} addElement={this.addElement} />
@@ -229,7 +272,7 @@ class FormEditor extends Component {
               <EditorCard
                 library={library}
                 index={index}
-                amount={totalElements}
+                canMove={canMove}
                 element={element}
                 elements={elements}
                 setElementModel={setElementModel}
@@ -246,17 +289,32 @@ class FormEditor extends Component {
             <Button onClick={this.save}>Save</Button>
           </Col>
         </Row>
-        <Row>
-          <Col xs={12}>
-            <h3>Preview</h3>
-            <ReformedFormComposer
-              library={previewLibrary}
-              elements={cloneDeep(this.state.elements).map(e =>
-                prepareForSaving(e)
-              )}
-            />
-          </Col>
-        </Row>
+        <hr />
+        {this.state.showPreview ? (
+          <Row>
+            <Col xs={12}>
+              <h3>Preview</h3>
+              <ReformedFormComposer
+                library={previewLibrary}
+                elements={cloneDeep(this.state.elements).map(e =>
+                  prepareForSaving(e)
+                )}
+              />
+            </Col>
+          </Row>
+        ) : (
+          <Row>
+            <Col xs={12}>
+              <p>
+                The form has changed. Click the button below to load preview
+                again.
+              </p>
+            </Col>
+            <Col>
+              <Button onClick={this.showPreview}>Load preview</Button>
+            </Col>
+          </Row>
+        )}
       </Container>
     )
   }

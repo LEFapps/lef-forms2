@@ -13,7 +13,7 @@ const SelectWrapper = props => {
 const SelectContainer = withTracker(({ element }) => {
   const { subscription, fields, defaultOptions, defaultOptionNames } = element
   const coll = find(collections(), c => c.subscription == subscription)
-  if (!coll) {
+  if (subscription && !coll) {
     console.warn(
       `“${subscription}” not found. Make sure your collections are declared globally. See documentation for more information.`
     )
@@ -55,6 +55,11 @@ const SelectContainer = withTracker(({ element }) => {
 })(SelectWrapper)
 
 const config = () => [
+  {
+    key: 'select.divider',
+    type: 'divider',
+    layout: { col: { xs: '12' } }
+  },
   {
     key: 'select',
     name: 'name',

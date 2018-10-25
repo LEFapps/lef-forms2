@@ -62,7 +62,7 @@ const config = () => [
     key: 'dependent.on',
     name: 'dependent.on',
     type: 'text',
-    label: 'Dependent on field:',
+    label: 'Show field only when …',
     attributes: {
       placeholder: 'Field identifier'
     },
@@ -72,19 +72,19 @@ const config = () => [
     key: 'dependent.operator',
     name: 'dependent.operator',
     type: 'select',
-    label: 'Dependency operator',
+    label: 'Condition',
     layout: { col: { xs: 12, sm: 5, md: '3' } },
     dependent: { on: 'dependent.on' }, // oh yes :)
-    options: ['', 'in', 'gt', 'gte', 'lt', 'lte', 'is', 'isnt'],
+    options: ['', 'is', 'isnt', 'in', 'gt', 'gte', 'lt', 'lte'],
     optionNames: [
-      'None',
-      'Field in [value(s)]',
-      'Source > [value]',
-      'Source ≥ {value]',
-      'Source < [value]',
-      'Source ≤ [value]',
-      'Source IS [value]',
-      'Source IS NOT [value]'
+      '… has any value.',
+      '… is exactly …',
+      '… has any value, except …',
+      '… contains …',
+      '… is greater than …',
+      '… is greater or equal to …',
+      '… is less than …',
+      '… is less or equal to …'
     ]
   },
   {
@@ -104,7 +104,11 @@ const config = () => [
   }
 ]
 
+const transform = element => {
+  return element
+}
+
 const filter = key => !includes([], key)
 
 export default Dependent
-export { config }
+export { config, transform }

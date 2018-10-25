@@ -26,6 +26,11 @@ const Select = props => {
 
 const config = () => [
   {
+    key: 'select.divider',
+    type: 'divider',
+    layout: { col: { xs: '12' } }
+  },
+  {
     key: 'select',
     name: 'name',
     type: 'text',

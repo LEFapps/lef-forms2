@@ -310,8 +310,8 @@ If you are creating a large component and/or decorator library, it might be wort
 
 You can create a select with options gathered from a collection.
 
-```JSON
-{
+```JS
+const element = {
   "key" : "selectCollection.orgs",
   "name" : "organization",
   "label" : "Organization",
@@ -330,7 +330,7 @@ You can create a select with options gathered from a collection.
 }
 ```
 
-Before the form can access documents from these collections, you should declare them globally like shown below. **Import this file at least on the client.** Collections declared here are available in the form Editor.
+Before the form can access documents from these collections, you should declare them globally as shown below. **Import this file at least in the client startup file.** Collections declared here are available in the form Editor.
 
 ```JS
 const collections = [

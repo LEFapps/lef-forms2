@@ -36,6 +36,11 @@ GenericInputNoChildren.displayName = 'Input'
 
 const config = () => [
   {
+    key: 'input.divider',
+    type: 'divider',
+    layout: { col: { xs: '12' } }
+  },
+  {
     key: 'input',
     name: 'name',
     type: 'text',

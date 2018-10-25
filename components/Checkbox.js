@@ -18,6 +18,11 @@ Checkbox.displayName = 'Checkbox'
 
 const config = () => [
   {
+    key: 'checkbox.divider',
+    type: 'divider',
+    layout: { col: { xs: '12' } }
+  },
+  {
     key: 'checkbox',
     name: 'name',
     type: 'text',
