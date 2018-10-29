@@ -88,28 +88,50 @@ Blueprint of an element:
 {
   "key" : "unique key: only needed if name can cause identical keys (e.g. when using dependent) OR when using form editor",
   "name" : "name.supports.nesting",
-  "type" : "text",
+  "type" : "text/textarea/select/checkbox/divider/infobox",
+  "label" : {
+    "nl" : "LabelText (NL)",
+    "en" : "LabelText (EN)"
+  },
   "attributes" : {
-    "placeholder" : "placeholder",
+    "placeholders" : {
+      "nl" : "PlaceholderText (NL)",
+      "en" : "PlaceholderText (EN)"
+    },
     "multiple": true,
-    "size": "12",
-    "rows" : "5"
+    "size": 12,
+    "rows" : 5
   },
   "required" : true,
   "dependent" : {
     "on" : "dependentOn",
-    "operator" : "in, gt, gte, lt, lte, is; isnt, or empty",
+    "operator" : "in, gt, gte, lt, lte, is isnt, ''",
     "values" : "value or array of values"
   },
   "schema": {
-    "description": "Help text (text or Translate component)"
+    "description": {
+      "nl" : "HelpText (NL)",
+      "en" : "HelpText (EN)"
+    }
   },
-  "label" : "Label (text or Translate component)",
   "layout" : {
     "col" : {
-      "md" : "6"
+      "xs" : 12,
+      "md" : 6
     }
-  }
+  },
+  "options" : [
+    {
+      "_id" : "~red",
+      "nl" : "Rood",
+      "en" : "Red"
+    },
+    {
+      "_id" : "~blue",
+      "nl" : "Blauw",
+      "en" : "Blue"
+    }
+  ]
 }
 ```
 
@@ -122,12 +144,15 @@ You (probably) only need to make one `EasyForm` instance per "type" of form in y
 If you wish to modify the standard component and decorator libraries, you can do things like this:
 
 ```JSX
+import { withTranslator } from 'meteor/lef:translations'
+
 const MyFormConfig = new EasyForm()
 MyFormConfig.addComponent(name1,component)
 MyFormConfig.removeComponent(name2)
 MyFormConfig.addDecorator(name3,decorator)
 MyFormConfig.removeDecorator(name4)
 const MyForm = MyFormConfig.instance()
+const MyTranslatedForm = withTranslator(MyForm)
 ```
 
 or
@@ -143,7 +168,10 @@ const MyForm = new EasyForm({library:MyComponents,decorators:MyDecorators}).inst
 It's extremely easy to get a form editor for the example form above:
 
 ```JSX
+import { withTranslator } from 'meteor/lef:translations'
+
 const MyFormEditor = new EasyForm().editor()
+const MyTranslatedFormEditor = withTranslator(MyFormEditor)
 
 class Example extends Component {
   _onSubmit = (formElements) => {
@@ -153,9 +181,10 @@ class Example extends Component {
   }
   render() {
     return (
-      <MyFormEditor
+      <MyTranslatedFormEditor
         initialModel={formElements}
         onSubmit={this._onSubmit}
+      >
         <Button type="submit">Submit</Button>
       </MyFormEditor>
     )
@@ -185,29 +214,40 @@ class TextComponent extends Component {
   }
 }
 
-const config = [
+const transform = (element, { translator, model }, saving) => {
+  // perform mutations of element properties
+  // when saving or retrieving (saving = true/false)
+  // Example: see translations for selects
+  return element // do not forget to return the altered element
+}
+
+const config = ({ translator, model }) = return [
   {
-    kay: "name",
+    key: "name",
     name: "name",
     type: "text",
-    label: "Field name",
+    label: "Field name", // or translator object { nl: "", en: "" }
     attributes: {
-      placeholder: "Technical name for field"
+      placeholder: "Technical name for field",
+      // OR
+      placeholders: {
+        en: "Technical name for field",
+      }
     },
     required: true,
-    layout: { col: { xs: "12" } },
+    layout: { col: { xs: 12 } },
   },
   {
-    kay: "attributes.placeholder",
-    name: "attributes.placeholder",
+    key: "attributes.placeholder",
+    name: "attributes.placeholders",
     type: "text",
     label: "Placeholder",
-    layout: { col: { xs: "12" } }
+    layout: { col: { xs: 12 } }
   }
 ]
 
 export default TextComponent
-export { config }
+export { transform, config }
 ```
 
 Note that the `config` will determine what can be edited in the form editor.
@@ -239,8 +279,14 @@ const FormGroupDecorator = WrappedComponent => props => (
   </FormGroup>
 )
 
+const transform = (element, { translator, model }, saving) => {
+  // perform mutations of element properties
+  // when saving or retrieving (saving = true/false)
+  // Example: see translations for selects
+  return element // do not forget to return the altered element
+}
 
-const config = [
+const config = ({ translator, model }) => [
   {
     key: "label",
     name: "label",
@@ -257,7 +303,7 @@ const combine = _.flip(_.union)
 const filter = componentType => _.includes(["textarea", "text"], componentType)
 
 export default FormGroupDecorator
-export { config, combine, filter }
+export { transform, config, combine, filter }
 ```
 
 You also need to add it to the `DecoratorLibrary`, for example like this:
@@ -304,6 +350,34 @@ Note that the `props` that are passed to the decorator include both `element` co
 
 If you are creating a large component and/or decorator library, it might be worthwhile to have a look at `Components.js` and `Decorators.js` for ideas on how to bring the together.
 
+## Translations
+
+When wrapping the Form instance or editor in `lef:translation`’s `withTranslator`, you have access to the `translator` object inside library config fields. It is then recommended to pass `translator` as a prop to each `<Form />` component.
+
+There is a helper function available to make it easier to retrieve the correct language from `placeholders`, `label` and other fields.
+
+```JS
+import { translatorText } from '<root>/translator'
+
+const label = {
+  nl: 'NL Label',
+  en: 'EN Label'
+}
+
+// example function for demonstration purposes
+const getLabel = ({ translator }) => translatorText('Label String', translator)
+// returns label if label is a String
+
+const getLabel = ({ translator }) => translatorText(label, translator, false) || 'fallback'
+// returns 'NL Label' if translator.currentLanguage == 'nl'
+// returns 'EN Label' if translator.currentLanguage is undefined, but default language == 'en'
+// returns label.default if translator is undefined
+// returns first item in label if translator is undefined and key 'default' is not present in label
+// returns '' if label is empty, you can then project a fallback
+
+// The last parameter forces 'default' as first key to check
+```
+
 ## Special Components
 
 ### select-collection
@@ -314,18 +388,20 @@ You can create a select with options gathered from a collection.
 const element = {
   "key" : "selectCollection.orgs",
   "name" : "organization",
-  "label" : "Organization",
+  "label" : {
+    "nl" : "Organisatie",
+    "en" : "Organization"
+  },
   "type" : "select-collection",
   "subscription" : "userOrg", // subscription name
   "fields" : [ // fields to show as option
       "name", // if populated, this field is used for sorting
       "address.city"
   ],
-  "defaultOptionNames" : [ // extra options added before collection options
-      "New organization"
-  ],
   "defaultOptions" : [ // values for extra options
-    "~new-organization"
+    "_id" : "~new-organization",
+    "nl" : "Nieuwe organisatie",
+    "en" : "New organization"
   ]
 }
 ```

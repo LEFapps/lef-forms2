@@ -17,6 +17,8 @@ import AttributesDecorator from './decorators/Attributes'
 import LayoutDecorator from './decorators/Layout'
 import DependentDecorator from './decorators/Dependent'
 import ValidateDecorator from './decorators/Validate'
+import NameDecorator from './decorators/Name'
+import PlaceholderDecorator from './decorators/Placeholder'
 
 // console.log(ComponentConfiguration)
 
@@ -44,5 +46,7 @@ export {
   AttributesDecorator,
   LayoutDecorator,
   ValidateDecorator,
-  DependentDecorator
+  DependentDecorator,
+  NameDecorator,
+  PlaceholderDecorator
 }

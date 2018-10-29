@@ -19,17 +19,23 @@ const Validate = WrappedComponent => props => {
   }
 }
 
-const config = () => [
+const config = ({ translator, model }) => [
   {
-    key: 'validate',
+    key: 'validate.divider',
     type: 'divider',
+    layout: { col: { xs: 12 } }
+  },
+  {
+    key: 'validate.infobox',
+    type: 'infobox',
+    label: '**Validation**',
     layout: { col: { xs: 12 } }
   },
   {
     key: 'validate.required',
     name: 'required',
     type: 'checkbox',
-    label: 'Required',
+    label: 'Field is required',
     layout: { col: { xs: 12 } }
   }
 ]

@@ -1,17 +1,18 @@
 import React from 'react'
 import { Text } from 'meteor/lef:utils'
+import { translatorText } from '../translator'
 
 const InfoBoxComponent = props => {
-  const { bindInput, element, attributes: propsAttributes } = props
+  const { translator, bindInput, element, attributes: propsAttributes } = props
   const { attributes: elementAttributes } = element
   return (
     <div {...elementAttributes} {...propsAttributes}>
-      <Text content={element.label} />
+      <Text content={translatorText(element.label, translator)} />
     </div>
   )
 }
 
-const config = () => [
+const config = ({ translator, model }) => [
   {
     name: 'label',
     type: 'textarea',

@@ -2,165 +2,31 @@ import React, { Component } from 'react'
 import { Random } from 'meteor/random'
 import { FormComposer } from './FormComposer'
 import reformed from './reformed'
-import { prepareForEditor, prepareForSaving } from './editor/dataTransformer'
+import EditorCard from './editor/EditorCard'
 import {
   Container,
   Row,
   Col,
-  Badge,
   Button,
   ButtonGroup,
-  Card,
-  CardBody,
-  CardTitle,
-  CardSubtitle,
-  CardText,
   CardHeader,
-  CardFooter,
   UncontrolledCollapse,
   UncontrolledButtonDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem
 } from 'reactstrap'
-import {
-  size,
-  get,
-  flow,
-  find,
-  isArray,
-  isPlainObject,
-  capitalize,
-  upperCase,
-  includes,
-  cloneDeep
-} from 'lodash'
+import { get, capitalize, cloneDeep } from 'lodash'
 
-class ElementEditor extends Component {
-  constructor (props) {
-    super(props)
-    // insert middleware into reformed
-    // to intercept the setModel call
-    // to push model state
-    // up the hierarchy:
-    this.middleware = modelHandler => {
-      modelHandler.setModel = flow([
-        modelHandler.setModel,
-        this.props.setElement
-      ])
-      return modelHandler
-    }
-    this.ElementForm = reformed(this.middleware)(FormComposer)
-  }
-  render () {
-    return <this.ElementForm {...this.props} />
-  }
-}
-
-class EditorCard extends Component {
-  constructor (props) {
-    super(props)
-  }
-  shouldComponentUpdate (nextProps, nextState) {
-    // performance gets really bad when not doing this!
-    const propsResult = JSON.stringify(this.props) != JSON.stringify(nextProps)
-    // const elementResult = this.props.element
-    console.log(
-      JSON.stringify(this.props.element),
-      JSON.stringify(nextProps.element)
-    )
-    return propsResult // || elementResult
-  }
-  render () {
-    const {
-      library,
-      index,
-      element,
-      elements,
-      setElementModel,
-      onRemove,
-      onMoveElement,
-      onDuplicate,
-      canMove
-    } = this.props
-    const toggle = `toggle-element-${index}-${element.type}`
-    const has = (element, field) => !!find(element, e => e.name == field)
-    const dependentOn = get(element, 'dependent.on')
-    return (
-      <Card
-        style={{ margin: '1rem 0', marginLeft: dependentOn ? '1rem' : '0' }}
-      >
-        <CardHeader>
-          <ButtonGroup className={'float-right'} style={{ zIndex: 20 }}>
-            <Button
-              outline
-              color={'danger'}
-              title={'Remove Element'}
-              onClick={() => onRemove(element)}
-            >
-              ✕
-            </Button>
-            <Button
-              outline
-              color={'success'}
-              title={'Duplicate Element'}
-              onClick={() => onDuplicate(element)}
-            >
-              ⧉
-            </Button>
-            <Button
-              outline
-              color={'info'}
-              title={'Move Element Up'}
-              onClick={() => onMoveElement(element, -1)}
-              disabled={!canMove(index, -1)}
-            >
-              △
-            </Button>
-            <Button
-              outline
-              color={'info'}
-              title={'Move Element Down'}
-              onClick={() => onMoveElement(element, 1)}
-              disabled={!canMove(index, 1)}
-            >
-              ▽
-            </Button>
-          </ButtonGroup>
-          <CardTitle id={toggle} style={{ cursor: 'pointer' }}>
-            {has(elements, 'label')
-              ? element.label && element.label.translate
-                ? element.label.translate
-                : (size(element.label) > 64
-                    ? element.label.substr(0, 50) + '…'
-                    : element.label) || <em>_label</em>
-              : element.type}
-          </CardTitle>
-          <CardSubtitle>
-            <small className='text-muted'>
-              <Badge color='light'>{upperCase(element.type)}</Badge>{' '}
-              {has(elements, 'name')
-                ? element.name || <em>_identifier</em>
-                : null}
-              {dependentOn ? `, depends on ${dependentOn}` : null}
-            </small>
-          </CardSubtitle>
-        </CardHeader>
-        <UncontrolledCollapse toggler={`#${toggle}`}>
-          <CardBody>
-            <ElementEditor
-              el={element}
-              library={library}
-              elements={elements}
-              initialModel={element}
-              setElement={setElementModel}
-            />
-          </CardBody>
-        </UncontrolledCollapse>
-      </Card>
-    )
-  }
-}
+const transformElements = (elements, library, saving = true) =>
+  elements.map(element => {
+    const el = cloneDeep(element)
+    const { type } = el
+    if (library.has(type)) {
+      const { transformer } = library.get(type)
+      return transformer ? transformer(el, saving) : el
+    } else return el
+  })
 
 class FormEditor extends Component {
   constructor (props) {
@@ -168,7 +34,7 @@ class FormEditor extends Component {
     this.state = {
       showPreview: true,
       elements: this.props.initialModel
-        ? this.props.initialModel.map(e => prepareForEditor(e))
+        ? transformElements(this.props.initialModel, props.library, false)
         : []
     }
     this.setElement = this.setElement.bind(this)
@@ -182,14 +48,20 @@ class FormEditor extends Component {
   }
   setElement (index, element) {
     this.setState(prevstate => {
-      prevstate.elements[index] = prepareForEditor(element)
+      prevstate.elements[index] = transformElements(
+        [element],
+        this.props.library,
+        false
+      )[0]
       return { elements: prevstate.elements }
     })
     this.showPreview(false)
     return element
   }
   save () {
-    this.props.onSubmit(this.state.elements.map(e => prepareForSaving(e)))
+    const { library } = this.props
+    const { elements } = this.state
+    this.props.onSubmit(transformElements(elements, library))
   }
   addElement (type) {
     this.setState(prevstate => {
@@ -234,7 +106,10 @@ class FormEditor extends Component {
   }
   removeElement (element) {
     if (
-      confirm(`Are you sure you want to remove the element "${element.name}"`)
+      confirm(
+        `Are you sure you want to remove the element "${element.name ||
+          'empty ' + element.type}"`
+      )
     ) {
       this.setState(prevstate => {
         const index = this.state.elements.indexOf(element)
@@ -280,6 +155,7 @@ class FormEditor extends Component {
                 onDuplicate={this.duplicateElement}
                 onMoveElement={this.moveElement}
                 key={`element-${element.key}`}
+                translator={this.props.translator}
               />
             )
           } else return null
@@ -296,9 +172,11 @@ class FormEditor extends Component {
               <h3>Preview</h3>
               <ReformedFormComposer
                 library={previewLibrary}
-                elements={cloneDeep(this.state.elements).map(e =>
-                  prepareForSaving(e)
+                elements={transformElements(
+                  this.state.elements,
+                  this.props.library
                 )}
+                translator={this.props.translator}
               />
             </Col>
           </Row>

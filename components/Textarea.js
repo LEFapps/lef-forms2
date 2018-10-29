@@ -24,36 +24,25 @@ const Textarea = props => {
   )
 }
 
-const config = () => [
+const config = ({translator, model}) => [
   {
     key: 'textarea.divider',
     type: 'divider',
-    layout: { col: { xs: '12' } }
-  },
-  {
-    key: 'textarea',
-    name: 'name',
-    type: 'text',
-    label: 'Field name',
-    required: true,
-    attributes: {
-      rows: '1'
-    },
-    layout: { col: { xs: '12', sm: 6 } }
-  },
-  {
-    key: 'textarea.placeholder',
-    name: 'attributes.placeholder',
-    type: 'text',
-    label: 'Placeholder',
-    layout: { col: { xs: '12', sm: 6 } }
+    layout: { col: { xs: 12 } }
   },
   {
     key: 'textarea.rows',
     name: 'attributes.rows',
     type: 'text',
-    label: 'Number of rows',
-    layout: { col: { xs: 12, sm: 6, md: '4' } }
+    label: 'Size',
+    attributes: {
+      placeholders: {
+        nl: 'Aantal lijnen, bv. 5',
+        fr: 'Combien de lignes, ex. 5',
+        en: 'Number of lines, e.g. 5',
+      }
+    },
+    layout: { col: { xs: 6, md: 4 } },
   }
 ]
 

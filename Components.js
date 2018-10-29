@@ -1,5 +1,5 @@
 import { Library } from './Library'
-import { isArray, isFunction, stubArray } from 'lodash'
+import { isArray, isFunction, stubArray, identity } from 'lodash'
 
 // cannot be used by require() since it's not imported anywhere else
 import GenericInputNoChildren from './components/GenericInputNoChildren'
@@ -26,9 +26,8 @@ library.forEach((path, name) => {
   const component = require(path)
   library.set(name, {
     component: component.default,
-    config: isArray(isFunction(component.config) ? component.config() : null)
-      ? component.config
-      : stubArray
+    config: isFunction(component.config) ? component.config : stubArray,
+    transform: isFunction(component.transform) ? component.transform : identity
   })
 })
 

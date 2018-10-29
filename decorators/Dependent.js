@@ -5,7 +5,10 @@ import {
   isUndefined,
   castArray,
   intersection,
-  includes
+  includes,
+  compact,
+  map,
+  merge
 } from 'lodash'
 
 const dependency = ({ on, operator, values }) => model => {
@@ -52,46 +55,84 @@ const Dependent = WrappedComponent => props => {
   return <WrappedComponent {...props} />
 }
 
-const config = () => [
+const config = ({ translator, model }) => [
   {
-    key: 'dependent',
+    key: 'dependent.divider',
     type: 'divider',
+    layout: { col: { xs: 12 } }
+  },
+  {
+    key: 'dependent.infobox',
+    type: 'infobox',
+    label: '**Field display depends on other field**',
     layout: { col: { xs: 12 } }
   },
   {
     key: 'dependent.on',
     name: 'dependent.on',
-    type: 'text',
-    label: 'Show field only when …',
+    type: model ? 'select' : 'text',
+    label: 'Identifier of other field',
+    options: model
+      ? compact(
+          map(
+            model,
+            element =>
+              model.name ? merge({ _id: model.name }, model.label) : false
+          )
+        )
+      : [],
     attributes: {
       placeholder: 'Field identifier'
     },
-    layout: { col: { xs: 12, sm: 12, md: '4' } }
+    layout: { col: { xs: 12, sm: 12, md: 4 } }
   },
   {
     key: 'dependent.operator',
     name: 'dependent.operator',
     type: 'select',
     label: 'Condition',
-    layout: { col: { xs: 12, sm: 5, md: '3' } },
+    layout: { col: { xs: 12, sm: 5, md: 3 } },
     dependent: { on: 'dependent.on' }, // oh yes :)
-    options: ['', 'is', 'isnt', 'in', 'gt', 'gte', 'lt', 'lte'],
-    optionNames: [
-      '… has any value.',
-      '… is exactly …',
-      '… has any value, except …',
-      '… contains …',
-      '… is greater than …',
-      '… is greater or equal to …',
-      '… is less than …',
-      '… is less or equal to …'
+    options: [
+      {
+        _id: '',
+        default: '… has any value.'
+      },
+      {
+        _id: 'is',
+        default: '… is exactly …'
+      },
+      {
+        _id: 'isnt',
+        default: '… has any value, except …'
+      },
+      {
+        _id: 'in',
+        default: '… contains …'
+      },
+      {
+        _id: 'gt',
+        default: '… is greater than …'
+      },
+      {
+        _id: 'gte',
+        default: '… is greater or equal to …'
+      },
+      {
+        _id: 'lt',
+        default: '… is less than …'
+      },
+      {
+        _id: 'lte',
+        default: '… is less or equal to …'
+      }
     ]
   },
   {
     key: 'dependent.values',
     name: 'dependent.values',
     type: 'text',
-    label: 'Dependency value',
+    label: 'Value',
     layout: { col: { xs: 12, sm: 7, md: '5' } },
     dependent: {
       on: 'dependent.operator',
@@ -104,11 +145,7 @@ const config = () => [
   }
 ]
 
-const transform = element => {
-  return element
-}
-
 const filter = key => !includes([], key)
 
 export default Dependent
-export { config, transform }
+export { config }

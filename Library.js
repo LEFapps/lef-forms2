@@ -39,12 +39,20 @@ class DecoratorLibrary extends Library {
   clone () {
     return new DecoratorLibrary(this.entries())
   }
-  apply (componentLibrary) {
+  apply (componentLibrary, context) {
     this.forEach((source, sourceKey) => {
       const decorator = grab(source, 'decorator', isFunction, sourceKey)
       const combine = grab(source, 'combine', isFunction, sourceKey)
       const filter = grab(source, 'filter', isFunction, sourceKey)
       const decoratorConfig = grab(source, 'config', isFunction, sourceKey)
+      const decoratorTransform = grab(
+        source,
+        'transform',
+        isFunction,
+        sourceKey
+      )
+      source.transformer = (element, saving) =>
+        decoratorTransform(element, context, saving)
       componentLibrary.forEach((target, targetKey) => {
         // is this decorator interested?
         if (filter(targetKey)) {
@@ -57,9 +65,20 @@ class DecoratorLibrary extends Library {
           target.component.displayName = `${sourceKey}(${originalDisplayName})`
           // combine configurations
           const componentConfig = grab(target, 'config', isFunction, targetKey)
-          target.config = () => combine(componentConfig(), decoratorConfig())
+          target.config = () =>
+            combine(componentConfig(context), decoratorConfig(context))
+          const componentTransform = grab(
+            target,
+            'transform',
+            isFunction,
+            targetKey
+          )
+          target.transformer = (element, saving) =>
+            componentTransform(element, context, saving)
         } else {
-          //          console.log(`${sourceKey} is not interested in ${targetKey}`)
+          // const info = `${sourceKey} is not interested in ${targetKey}`
+          // if (console.info) console.info(info)
+          // else console.log(info)
         }
       })
     })

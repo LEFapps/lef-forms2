@@ -14,31 +14,7 @@ const TextComponent = props => {
   )
 }
 
-const config = () => [
-  {
-    key: 'text.divider',
-    type: 'divider',
-    layout: { col: { xs: '12' } }
-  },
-  {
-    key: 'text',
-    name: 'name',
-    type: 'text',
-    label: 'Field identifier',
-    attributes: {
-      placeholder: 'Technical name for field'
-    },
-    required: true,
-    layout: { col: { xs: 12, sm: 6 } }
-  },
-  {
-    key: 'text.placeholder',
-    name: 'attributes.placeholder',
-    type: 'text',
-    label: 'Placeholder',
-    layout: { col: { xs: '12', sm: 6 } }
-  }
-]
+const config = ({ translator, model }) => []
 
 export default TextComponent
-export { config }
+// export { config }

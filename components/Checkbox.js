@@ -1,6 +1,7 @@
 import React from 'react'
 import { GenericInputNoChildren } from './GenericInput'
-import { get } from 'lodash'
+import { get, upperCase, kebabCase } from 'lodash'
+import { translatorText } from '../translator'
 
 const Checkbox = props => {
   const { bindInput, ...xProps } = props
@@ -11,36 +12,18 @@ const Checkbox = props => {
       onChange: e => props.setProperty(name, e.target.checked)
     }
   }
+  if (get(xProps, 'value', '')) {
+    xProps.value = translatorText(xProps.value, translator)
+  }
   return <GenericInputNoChildren {...xProps} bindInput={bindCheckedInput} />
 }
 
 Checkbox.displayName = 'Checkbox'
 
-const config = () => [
-  {
-    key: 'checkbox.divider',
-    type: 'divider',
-    layout: { col: { xs: '12' } }
-  },
-  {
-    key: 'checkbox',
-    name: 'name',
-    type: 'text',
-    label: 'Field identifier',
-    attributes: {
-      placeholder: 'Technical name for field'
-    },
-    required: true,
-    layout: { col: { xs: '12', sm: 8 } }
-  },
-  {
-    key: 'checkbox.value',
-    name: 'value',
-    type: 'text',
-    label: 'Value',
-    layout: { col: { xs: '12', sm: 4 } }
-  }
-]
+const config = ({ translator, model }) => []
+const transform = (element, translator, saving) => {
+  return `~${kebabCase(translatorText(element.label, translator, true))}`
+}
 
 export default Checkbox
-export { config }
+export { transform }
