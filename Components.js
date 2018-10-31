@@ -7,16 +7,19 @@ import GenericInputNoChildren from './components/GenericInputNoChildren'
 const library = new Library([
   ['divider', './components/Divider'],
   ['infobox', './components/InfoBox'],
-  ['textarea', './components/Textarea'],
+  ['number', './components/GenericInputNoChildren'],
   ['text', './components/Text'],
+  ['textarea', './components/Textarea'],
+  ['radio', './components/Radio'],
   ['checkbox', './components/Checkbox'],
+  ['checkbox-mc', './components/CheckboxMC'],
+  ['checkbox-mc-collection', './components/CheckboxMcCollection'],
   ['select', './components/Select'],
   ['select-collection', './components/SelectCollection'],
-  ['password', './components/GenericInputNoChildren'],
-  ['email', './components/GenericInputNoChildren'],
   ['phone', './components/GenericInputNoChildren'],
+  ['email', './components/GenericInputNoChildren'],
+  ['password', './components/GenericInputNoChildren'],
   ['url', './components/GenericInputNoChildren'],
-  ['number', './components/GenericInputNoChildren'],
   ['datetime-local', './components/GenericInputNoChildren']
 ])
 

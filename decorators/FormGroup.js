@@ -5,11 +5,20 @@ import { translatorText } from '../translator'
 
 const FormGroupDecorator = WrappedComponent => props => {
   const { element, translator } = props
-  const { label } = element || ''
-  if (includes(['radio', 'checkbox'], props.element.type)) {
+  const { label = '' } = element || {}
+  if (element.custom) {
+    return (
+      <FormGroup>
+        <Label>
+          {translatorText(element.label, translator) || element.type}
+        </Label>
+        <WrappedComponent {...props} />
+      </FormGroup>
+    )
+  } else if (includes(['radio', 'checkbox'], props.element.type)) {
     return (
       <FormGroup check>
-        <Label for={props.element.name} check>
+        <Label check>
           <WrappedComponent {...props} />
           {translatorText(element.label, translator) || element.type}
         </Label>
@@ -19,7 +28,7 @@ const FormGroupDecorator = WrappedComponent => props => {
     return (
       <FormGroup>
         {props.element.label ? (
-          <Label for={props.element.name}>
+          <Label>
             {translatorText(element.label, translator) || element.type}
           </Label>
         ) : null}

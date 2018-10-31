@@ -57,7 +57,17 @@ const config = ({ translator, model }) => {
 
 const filter = key =>
   !includes(
-    ['select', 'select-collection', 'checkbox', 'divider', 'infobox'],
+    [
+      'select',
+      'select-collection',
+      'checkbox',
+      'checkbox-mc',
+      'checkbox-mc-collection',
+      'radio',
+      'divider',
+      'infobox',
+      'upload'
+    ],
     key
   )
 const combine = flip(union)

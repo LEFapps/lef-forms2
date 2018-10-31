@@ -7,6 +7,9 @@ import DefaultDecorators from './Decorators'
 import Textarea from './components/Textarea'
 import TextInput from './components/Text'
 import Checkbox from './components/Checkbox'
+import CheckboxMC from './components/CheckboxMC'
+import CheckboxMcCollection from './components/CheckboxMcCollection'
+import Radio from './components/Radio'
 import Select from './components/Select'
 import SelectCollection from './components/SelectCollection'
 import Divider from './components/Divider'
@@ -35,6 +38,9 @@ export {
   Textarea,
   TextInput,
   Checkbox,
+  CheckboxMC,
+  CheckboxMcCollection,
+  Radio,
   Select,
   SelectCollection,
   InfoBox,

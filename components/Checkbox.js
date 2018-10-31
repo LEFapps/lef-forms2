@@ -5,10 +5,12 @@ import { translatorText } from '../translator'
 
 const Checkbox = props => {
   const { bindInput, ...xProps } = props
+  xProps.checked = get(props.model, props.element.name, false)
   const bindCheckedInput = name => {
     return {
       name,
-      checked: get(props.model, name),
+      // label: translatorText(props.value),
+      checked: get(props.model, name, false),
       onChange: e => props.setProperty(name, e.target.checked)
     }
   }
@@ -21,8 +23,13 @@ const Checkbox = props => {
 Checkbox.displayName = 'Checkbox'
 
 const config = ({ translator, model }) => []
-const transform = (element, translator, saving) => {
-  return `~${kebabCase(translatorText(element.label, translator, true))}`
+const transform = (element, { translator }, saving) => {
+  if (element.label) {
+    element.value = `~${kebabCase(
+      translatorText(element.label, translator, true)
+    )}`
+  }
+  return element
 }
 
 export default Checkbox

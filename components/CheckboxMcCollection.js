@@ -1,35 +1,19 @@
 import React from 'react'
 import { withTracker } from 'meteor/react-meteor-data'
-import Select, { transformOptions } from './Select'
+import CheckboxMC from './CheckboxMC'
+import { transformOptions } from './Select'
 import collectionWrapper, {
   collectionHeader,
   collectionElements
 } from '../editor/collectionWrapper'
-import {
-  map,
-  forEach,
-  reduce,
-  upperCase,
-  upperFirst,
-  kebabCase,
-  get,
-  find,
-  includes,
-  stubTrue,
-  cloneDeep,
-  assign,
-  size,
-  isString,
-  isArray,
-  isPlainObject
-} from 'lodash'
+import { upperCase, isString, isArray } from 'lodash'
 
 const SelectWrapper = props => {
   if (props.loading) return null
-  return <Select {...props} />
+  return <CheckboxMC {...props} />
 }
 
-const SelectCollection = collectionWrapper(SelectWrapper)
+const CheckboxMcCollection = collectionWrapper(SelectWrapper)
 
 const config = ({ translator, model }) => {
   const extraElements =
@@ -117,5 +101,5 @@ const transform = (element, { translator }, saving) => {
   return element
 }
 
-export default SelectCollection
+export default CheckboxMcCollection
 export { config, transform }
