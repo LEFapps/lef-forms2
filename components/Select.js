@@ -1,25 +1,17 @@
 import React from 'react'
 import GenericInput from './GenericInput'
 import {
-  zip,
   isArray,
   isString,
   isPlainObject,
   upperCase,
-  upperFirst,
   fromPairs,
-  toPairs,
-  map,
   forEach,
   reduce,
   kebabCase,
-  get,
-  find,
   includes,
-  cloneDeep,
   assign,
-  size,
-  stubTrue
+  size
 } from 'lodash'
 import { translatorText } from '../translator'
 
@@ -34,17 +26,15 @@ const Select = props => {
     : !options
   return (
     <GenericInput {...props}>
-      {!hasEmptyOption ? (
-        <option key={`${element.name}-option-default`} value={''}>
+      {!hasEmptyOption
+        ? <option key={`${element.name}-option-default`} value={''}>
           {'–'}
         </option>
-      ) : null}
-      {options.map(option => (
+        : null}
+      {options.map((option, index) => (
         <option
-          key={`${element.name}${element.key}-option-${option._id ||
-            option.default}`}
-          value={option._id}
-        >
+          key={`${element.name}${element.key}-option-${index}`}
+          value={option._id}>
           {translatorText(option, translator)}
         </option>
       ))}
@@ -53,7 +43,7 @@ const Select = props => {
   // }
 }
 
-const config = ({ translator, model }) => {
+const config = ({ translator }) => {
   const { languages } = translator || {}
   if (languages) {
     const headerField = [
