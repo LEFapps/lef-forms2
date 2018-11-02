@@ -3,6 +3,7 @@ import { FormComposer } from './FormComposer'
 import { ElementEditor, FormEditor } from './FormEditor'
 import DefaultComponents from './Components'
 import DefaultDecorators from './Decorators'
+import DefaultManipulators from './Manipulators'
 
 import Textarea from './components/Textarea'
 import TextInput from './components/Text'
@@ -24,6 +25,8 @@ import ValidateDecorator from './decorators/Validate'
 import NameDecorator from './decorators/Name'
 import PlaceholderDecorator from './decorators/Placeholder'
 
+import Repeater from './manipulators/Repeater'
+
 // console.log(ComponentConfiguration)
 
 export {
@@ -32,7 +35,8 @@ export {
   FormEditor,
   ElementEditor,
   DefaultComponents,
-  DefaultDecorators
+  DefaultDecorators,
+  DefaultManipulators
 }
 
 export {
@@ -56,5 +60,6 @@ export {
   ValidateDecorator,
   DependentDecorator,
   NameDecorator,
-  PlaceholderDecorator
+  PlaceholderDecorator,
+  Repeater
 }

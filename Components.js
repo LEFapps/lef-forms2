@@ -21,7 +21,8 @@ const library = new Library([
   ['password', './components/GenericInputNoChildren'],
   ['url', './components/GenericInputNoChildren'],
   ['upload', './components/Upload'],
-  ['datetime-local', './components/GenericInputNoChildren']
+  ['datetime-local', './components/GenericInputNoChildren'],
+  ['repeater', './manipulators/Repeater']
 ])
 
 // replace the paths with components and their config

@@ -172,10 +172,7 @@ class FormEditor extends Component {
               <h3>Preview</h3>
               <ReformedFormComposer
                 library={previewLibrary}
-                elements={transformElements(
-                  this.state.elements,
-                  this.props.library
-                )}
+                elements={this.state.elements}
                 translator={this.props.translator}
               />
             </Col>

@@ -19,7 +19,8 @@ const library = new DecoratorLibrary([
   ['formgroup', './decorators/FormGroup'],
   ['name', './decorators/Name'],
   ['layout', './decorators/Layout'],
-  ['dependent', './decorators/Dependent']
+  ['dependent', './decorators/Dependent'],
+  ['repeater', './manipulators/Repeater']
 ])
 
 library.forEach((path, name) => {
