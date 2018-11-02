@@ -9,7 +9,6 @@ const Checkbox = props => {
   const bindCheckedInput = name => {
     return {
       name,
-      // label: translatorText(props.value),
       checked: get(props.model, name, false),
       onChange: e => props.setProperty(name, e.target.checked)
     }
@@ -22,7 +21,6 @@ const Checkbox = props => {
 
 Checkbox.displayName = 'Checkbox'
 
-const config = ({ translator, model }) => []
 const transform = (element, { translator }, saving) => {
   if (element.label) {
     element.value = `~${kebabCase(

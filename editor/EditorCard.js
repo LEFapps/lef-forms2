@@ -13,7 +13,7 @@ import {
   CardHeader,
   UncontrolledCollapse
 } from 'reactstrap'
-import { size, get, flow, find, upperCase } from 'lodash'
+import { size, get, flow, find, upperCase, upperFirst, isString } from 'lodash'
 import { translatorText } from '../translator'
 
 class ElementEditor extends Component {
@@ -60,10 +60,20 @@ class EditorCard extends Component {
     const toggle = `toggle-element-${index}-${element.type}`
     const has = (element, field) => !!find(element, e => e.name == field)
     const dependentOn = get(element, 'dependent.on')
-    const label = (element.label
-      ? translatorText(element.label, this.props.translator)
-      : element.type
-    ).split('\n')[0]
+    // retrieve translate key first
+    // because wo do not want to lag the form builder with translations
+    let label =
+      get(
+        element,
+        'label.translate',
+        translatorText(element.label, this.props.translator)
+      ) || upperFirst(element.type)
+    if (isString(label)) {
+      label = label.split('\n')[0]
+      if (size(label) > 64) {
+        label = label.substr(0, 50) + '…'
+      }
+    }
     return (
       <Card
         style={{ margin: '1rem 0', marginLeft: dependentOn ? '1rem' : '0' }}
@@ -106,9 +116,7 @@ class EditorCard extends Component {
             </Button>
           </ButtonGroup>
           <CardTitle id={toggle} style={{ cursor: 'pointer' }}>
-            {size(label) > 64
-              ? label.substr(0, 50) + '…'
-              : label || <em>_label</em>}
+            {label || <em>_label</em>}
           </CardTitle>
           <CardSubtitle>
             <small className='text-muted'>
