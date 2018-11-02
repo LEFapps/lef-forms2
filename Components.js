@@ -20,6 +20,7 @@ const library = new Library([
   ['email', './components/GenericInputNoChildren'],
   ['password', './components/GenericInputNoChildren'],
   ['url', './components/GenericInputNoChildren'],
+  ['upload', './components/Upload'],
   ['datetime-local', './components/GenericInputNoChildren']
 ])
 

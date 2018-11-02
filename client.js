@@ -14,6 +14,7 @@ import Select from './components/Select'
 import SelectCollection from './components/SelectCollection'
 import Divider from './components/Divider'
 import InfoBox from './components/InfoBox'
+import Upload from './components/Upload'
 
 import FormGroupDecorator from './decorators/FormGroup'
 import AttributesDecorator from './decorators/Attributes'
@@ -44,7 +45,8 @@ export {
   Select,
   SelectCollection,
   InfoBox,
-  Divider
+  Divider,
+  Upload
 }
 
 export {
