@@ -8,8 +8,9 @@ const Radio = props => {
   const { translator, bindInput, ...xProps } = props
   return (props.element.options || []).map((option, i) => {
     const optionValue = option._id || option.default || option
+    const key = (props.element.key || '') + i
     xProps.custom = {
-      id: props.element.key + i,
+      id: key,
       type: 'radio',
       value: optionValue,
       label: translatorText(option, translator),
@@ -25,7 +26,7 @@ const Radio = props => {
     }
     return (
       <GenericInputNoChildren
-        key={props.element.key + i}
+        key={key}
         bindInput={bindCheckedInput}
         {...xProps}
       />
