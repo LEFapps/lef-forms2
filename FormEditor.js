@@ -154,7 +154,7 @@ class FormEditor extends Component {
                 onRemove={this.removeElement}
                 onDuplicate={this.duplicateElement}
                 onMoveElement={this.moveElement}
-                key={`element-${element.key}`}
+                key={`element-${element.key || index}`}
                 translator={this.props.translator}
               />
             )
