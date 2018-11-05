@@ -12,9 +12,7 @@ const translatorText = (text, translator, getDefault) => {
     const lang = getDefault
       ? get(translator, 'default', 'currentLanguage')
       : get(translator, 'currentLanguage', 'default')
-    return (
-      text[lang] || text.default || translation(text) || head(map(text, t => t))
-    )
+    return text[lang] || text.default || translation(text) || head(map(text))
   } else return ''
 }
 

@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
-import { Random } from 'meteor/random'
 import { Form, Row } from 'reactstrap'
 import { map, isArray } from 'lodash'
 
-const renderElements = (element, library, additionalProps) => {
+const renderElements = (element, library, additionalProps, index) => {
   if (library.has(element.type)) {
     let Component = library.get(element.type).component
-    const key = `${element.name}${element.key || Random.id()}`
+    const key = `${element.name}${element.key || index}`
     return <Component key={key} element={element} {...additionalProps} />
   } else {
     console.log(`Unknown element type: ${element.type}`)
@@ -25,8 +24,8 @@ class FormComposer extends Component {
   }
   renderElements (props) {
     const { elements, library, ...additionalProps } = props
-    return elements.map((element, key) =>
-      renderElements(element, library, additionalProps)
+    return elements.map((element, index) =>
+      renderElements(element, library, additionalProps, index)
     )
   }
   render () {
