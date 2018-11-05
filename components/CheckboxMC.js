@@ -9,8 +9,9 @@ const CheckboxMC = props => {
   const thisModel = get(props.model, props.element.name, [])
   return (props.element.options || []).map((option, i) => {
     const optionValue = option._id || option.default || option
+    const key = (props.element.key || '') + i
     xProps.custom = {
-      id: props.element.key + i,
+      id: key,
       type: 'checkbox',
       value: optionValue,
       label: translatorText(option, translator),
@@ -23,12 +24,14 @@ const CheckboxMC = props => {
         if (e.target.checked) {
           thisModel.push(optionValue)
           return props.setProperty(name, thisModel)
-        } else { props.setProperty(name, thisModel.filter(o => o !== optionValue)) }
+        } else {
+          props.setProperty(name, thisModel.filter(o => o !== optionValue))
+        }
       }
     })
     return (
       <GenericInputNoChildren
-        key={props.element.key + i}
+        key={key}
         bindInput={bindCheckedInput}
         {...xProps}
       />
