@@ -3,12 +3,13 @@ import { GenericInputNoChildren } from './GenericInput'
 import { transformOptions } from './Select'
 import { get, upperCase, kebabCase } from 'lodash'
 import { translatorText } from '../translator'
+import { Random } from 'meteor/random'
 
 const Radio = props => {
   const { translator, bindInput, ...xProps } = props
   return (props.element.options || []).map((option, i) => {
     const optionValue = option._id || option.default || option
-    const key = (props.element.key || '') + i
+    const key = (props.element.key || Random.id()) + i
     xProps.custom = {
       id: key,
       type: 'radio',

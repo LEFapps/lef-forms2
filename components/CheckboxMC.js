@@ -3,13 +3,14 @@ import { GenericInputNoChildren } from './GenericInput'
 import { transformOptions } from './Select'
 import { get, upperCase, kebabCase, includes } from 'lodash'
 import { translatorText } from '../translator'
+import { Random } from 'meteor/random'
 
 const CheckboxMC = props => {
   const { translator, bindInput, ...xProps } = props
   const thisModel = get(props.model, props.element.name, [])
   return (props.element.options || []).map((option, i) => {
     const optionValue = option._id || option.default || option
-    const key = (props.element.key || '') + i
+    const key = (props.element.key || Random.id()) + i
     xProps.custom = {
       id: key,
       type: 'checkbox',
