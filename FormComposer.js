@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
 import { Form, Row } from 'reactstrap'
-import { map, isArray } from 'lodash'
+import { map, isArray, get, set } from 'lodash'
 
 const renderElements = (element, library, additionalProps, index) => {
   if (library.has(element.type)) {
     let Component = library.get(element.type).component
     const key = `${element.name}${element.key || index}`
+    if (get(additionalProps, 'readOnly')) {
+      set(element, 'attributes.disabled', true)
+    }
     return <Component key={key} element={element} {...additionalProps} />
   } else {
     console.log(`Unknown element type: ${element.type}`)

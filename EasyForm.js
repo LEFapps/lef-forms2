@@ -53,7 +53,7 @@ class EasyForm {
       )
       return (
         <ReformedFormComposer library={components} {...props}>
-          {props.children}
+          {props.readOnly ? null : props.children}
         </ReformedFormComposer>
       )
     }
