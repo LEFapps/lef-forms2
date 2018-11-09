@@ -42,6 +42,7 @@ class EditorCard extends Component {
     super(props)
   }
   shouldComponentUpdate (nextProps, nextState) {
+    return false
     // performance gets really bad when not doing this!
     return JSON.stringify(this.props) != JSON.stringify(nextProps)
   }

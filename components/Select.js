@@ -26,15 +26,16 @@ const Select = props => {
     : !options
   return (
     <GenericInput {...props}>
-      {!hasEmptyOption
-        ? <option key={`${element.name}-option-default`} value={''}>
+      {!hasEmptyOption ? (
+        <option key={`${element.name}-option-default`} value={''}>
           {'–'}
         </option>
-        : null}
+      ) : null}
       {options.map((option, index) => (
         <option
           key={`${element.name}${element.key}-option-${index}`}
-          value={option._id}>
+          value={option._id}
+        >
           {translatorText(option, translator)}
         </option>
       ))}
@@ -63,13 +64,34 @@ const config = ({ translator }) => {
         layout: { col: { xs: 12 } }
       }
     ]
+    const idField = [
+      {
+        key: 'select.options._id',
+        name: 'options._id',
+        type: 'textarea',
+        label: 'ID (~value)',
+        layout: {
+          col: { xs: Math.max(3, Math.round(12 / (languages.length + 1))) }
+        },
+        attributes: {
+          rows: 8,
+          placeholders: {
+            nl: 'Eén optie per lijn',
+            fr: 'One item per line',
+            en: 'One item per line'
+          },
+          style: { whiteSpace: 'nowrap' }
+        },
+        required: true
+      }
+    ]
     const languageFields = languages.map(language => ({
       key: 'select.options.' + language,
       name: 'options.' + language,
       type: 'textarea',
       label: upperCase(language),
       layout: {
-        col: { xs: Math.max(3, Math.round(12 / languages.length)) }
+        col: { xs: Math.max(3, Math.round(12 / (languages.length + 1))) }
       },
       attributes: {
         rows: 8,
@@ -82,7 +104,7 @@ const config = ({ translator }) => {
       },
       required: true
     }))
-    return headerField.concat(languageFields)
+    return headerField.concat(idField.concat(languageFields))
   } else {
     return [
       {
@@ -148,20 +170,15 @@ const transformOptions = (defaultOptions, translator, saving) => {
     /* {nl:'nl\nnl2',en:'en\nen2'} => [{_id:'~nl',nl:'nl',en:'en'},{_id:'~nl2',nl:'nl2',en:'en2'}] */
     const reducer = (result, options, lang) => {
       options.split(optionDelimiter).map((option, key) => {
-        if (result[key]) result[key][lang] = option
-        else {
-          result[key] = {
-            _id: optionId(option),
-            [lang]: option
-          }
-        }
+        if (!result[key]) result[key] = {}
+        result[key][lang] = lang == '_id' ? optionId(option) : option
       })
       return result
     }
     return reduce(defaultOptions, reducer, [])
   } else if (isArray(defaultOptions) && !saving) {
     /* [{_id:'~nl',nl:'nl',en:'en'},{_id:'~nl2',nl:'nl2',en:'en2'}] => {nl:'nl\nnl2',en:'en\nen2'} */
-    const excludeKeys = ['_id', 'default']
+    const excludeKeys = ['default']
     const reducer = (result, option) => {
       forEach(option, (o, lang) => {
         if (!includes(excludeKeys, lang)) {

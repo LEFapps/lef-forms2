@@ -3,6 +3,7 @@ import {
   get,
   isEmpty,
   isUndefined,
+  isArray,
   castArray,
   intersection,
   includes,
@@ -14,13 +15,33 @@ import {
 const dependency = ({ on, operator, values }) => model => {
   const value = get(model, on)
   if (isUndefined(operator) && isUndefined(values)) return !isEmpty(value)
-  else if (operator === 'is' || isUndefined(operator)) {
+  else if (isUndefined(operator)) {
     if (isEmpty(values)) return isEmpty(value)
-    else return !isEmpty(intersection(castArray(value), castArray(values)))
+    else {
+      return !isEmpty(
+        intersection(
+          castArray(value),
+          isArray(values)
+            ? values
+            : includes(values, ',')
+              ? values.split(',')
+              : castArray(values)
+        )
+      )
+    }
   } else {
     switch (operator) {
       case 'in':
-        return !isEmpty(intersection(castArray(value), castArray(values)))
+        return !isEmpty(
+          intersection(
+            castArray(value),
+            isArray(values)
+              ? values
+              : includes(values, ',')
+                ? values.split(',')
+                : castArray(values)
+          )
+        )
         break
       case 'gt':
         return values > value

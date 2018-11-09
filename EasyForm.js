@@ -48,9 +48,8 @@ class EasyForm {
       reformed(config.middleware)(FormComposer)
     )
     return props => {
-      const components = this.modifyLibrary(
-        set(config, 'translator', props.translator)
-      )
+      set(config, 'translator', props.translator)
+      const components = this.modifyLibrary(config)
       return (
         <ReformedFormComposer library={components} {...props}>
           {props.readOnly ? null : props.children}
@@ -60,9 +59,8 @@ class EasyForm {
   }
   editor (config = {}) {
     return props => {
-      const components = this.modifyLibrary(
-        set(config, 'translator', props.translator)
-      )
+      set(config, 'translator', props.translator)
+      const components = this.modifyLibrary(config)
       return (
         <FormEditor library={components} {...props}>
           {props.children}

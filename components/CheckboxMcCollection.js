@@ -30,26 +30,56 @@ const config = ({ translator, model }) => {
           layout: { col: { xs: 12 } }
         }
       ].concat(
-          translator.languages.map(language => ({
-            key: 'select.options.' + language,
-            name: 'defaultOptions.' + language,
-            type: 'textarea',
-            label: upperCase(language),
-            layout: {
-              col: {
-                xs: Math.max(3, Math.round(12 / translator.languages.length))
-              }
-            },
-            attributes: {
-              rows: 3,
-              placeholders: {
-                nl: 'Eén optie per lijn',
-                fr: 'one item per line',
-                en: 'one item per line'
+          [
+            {
+              key: 'select.options._id',
+              name: 'options._id',
+              type: 'textarea',
+              label: 'ID (~value)',
+              layout: {
+                col: {
+                  xs: Math.max(
+                    3,
+                    Math.round(12 / (translator.languages.length + 1))
+                  )
+                }
               },
-              style: { whiteSpace: 'nowrap' }
+              attributes: {
+                rows: 8,
+                placeholders: {
+                  nl: 'Eén optie per lijn',
+                  fr: 'One item per line',
+                  en: 'One item per line'
+                },
+                style: { whiteSpace: 'nowrap' }
+              },
+              required: true
             }
-          }))
+          ].concat(
+            translator.languages.map(language => ({
+              key: 'select.options.' + language,
+              name: 'defaultOptions.' + language,
+              type: 'textarea',
+              label: upperCase(language),
+              layout: {
+                col: {
+                  xs: Math.max(
+                    3,
+                    Math.round(12 / (translator.languages.length + 1))
+                  )
+                }
+              },
+              attributes: {
+                rows: 3,
+                placeholders: {
+                  nl: 'Eén optie per lijn',
+                  fr: 'one item per line',
+                  en: 'one item per line'
+                },
+                style: { whiteSpace: 'nowrap' }
+              }
+            }))
+          )
         )
       : [
         {

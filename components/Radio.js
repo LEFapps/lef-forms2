@@ -57,13 +57,34 @@ const config = ({ translator, model }) => {
         layout: { col: { xs: 12 } }
       }
     ]
+    const idField = [
+      {
+        key: 'select.options._id',
+        name: 'options._id',
+        type: 'textarea',
+        label: 'ID (~value)',
+        layout: {
+          col: { xs: Math.max(3, Math.round(12 / (languages.length + 1))) }
+        },
+        attributes: {
+          rows: 8,
+          placeholders: {
+            nl: 'Eén optie per lijn',
+            fr: 'One item per line',
+            en: 'One item per line'
+          },
+          style: { whiteSpace: 'nowrap' }
+        },
+        required: true
+      }
+    ]
     const languageFields = languages.map(language => ({
       key: 'radio.options.' + language,
       name: 'options.' + language,
       type: 'textarea',
       label: upperCase(language),
       layout: {
-        col: { xs: Math.max(3, Math.round(12 / languages.length)) }
+        col: { xs: Math.max(3, Math.round(12 / (languages.length + 1))) }
       },
       attributes: {
         rows: 8,
@@ -76,7 +97,7 @@ const config = ({ translator, model }) => {
       },
       required: true
     }))
-    return headerField.concat(languageFields)
+    return headerField.concat(idField.concat(languageFields))
   } else {
     return [
       {
