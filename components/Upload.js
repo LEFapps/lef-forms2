@@ -21,7 +21,8 @@ const UploadComponent = props => {
       translator
     ),
     id: key,
-    name
+    name,
+    fileUploader: !!get(elementAttributes, 'fileUploader')
   }
   return (
     <div>
@@ -49,9 +50,55 @@ const UploadComponent = props => {
   )
 }
 
-const config = ({ translator, model }) => []
+const config = ({ translator, model }) => [
+  {
+    type: 'divider',
+    key: 'upload.divider',
+    layout: {
+      col: {
+        xs: 12
+      }
+    }
+  },
+  {
+    type: 'infobox',
+    key: 'upload.info',
+    label: {
+      nl: 'Bestanden',
+      en: 'Files'
+    },
+    layout: {
+      col: {
+        xs: 12
+      }
+    }
+  },
+  {
+    type: 'select',
+    key: 'upload.select',
+    name: 'attributes.fileUploader',
+    label: {
+      nl: 'Bestandsformaten',
+      en: 'Allowed File Types'
+    },
+    options: [
+      { _id: '', nl: 'Afbeeldingen', en: 'Images' },
+      {
+        _id: 'fileUploader',
+        nl: 'Courante bestanden',
+        en: 'Well-known formats'
+      }
+    ],
+    layout: {
+      col: {
+        xs: 12,
+        sm: 6
+      }
+    }
+  }
+]
 
 const transform = (element, { translator }, saving) => element
 
 export default UploadComponent
-// export { config, transform }
+export { config, transform }
