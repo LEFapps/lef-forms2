@@ -42,7 +42,9 @@ const UploadComponent = props => {
             }}
           />
         ) : (
-          <a href={modelValue} target={'_blank'} />
+          <a href={modelValue} target={'_blank'}>
+            {modelValue.split('/').pop()}
+          </a>
         )
       ) : null}
       <ImgUpload {...bindUploadInput(name)} {...custom} />
