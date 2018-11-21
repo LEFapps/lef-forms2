@@ -12,6 +12,7 @@ import {
   CardHeader,
   UncontrolledCollapse,
   UncontrolledButtonDropdown,
+  ButtonDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem
@@ -198,26 +199,45 @@ class FormEditor extends Component {
   }
 }
 
-const ButtonMenu = props => {
-  return (
-    <UncontrolledButtonDropdown>
-      <DropdownToggle caret>Add an Element&nbsp;</DropdownToggle>
-      <DropdownMenu>
-        <ButtonGroup vertical>
-          {Array.from(props.library.keys()).map(type => {
-            return (
-              <DropdownItem
-                key={`add-${type}`}
-                onClick={() => props.addElement(type)}
-              >
-                {capitalize(type)}
-              </DropdownItem>
-            )
-          })}
-        </ButtonGroup>
-      </DropdownMenu>
-    </UncontrolledButtonDropdown>
-  )
+class ButtonMenu extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      isOpen: false
+    }
+    this.toggle = this.toggle.bind(this)
+  }
+  toggle () {
+    this.setState(prevstate => ({ isOpen: !prevstate.isOpen }))
+  }
+  render () {
+    const { library, addElement } = this.props
+    return (
+      <ButtonDropdown
+        isOpen={this.state.isOpen}
+        toggle={this.toggle}
+        direction='right'
+      >
+        <DropdownToggle caret>Add an Element&nbsp;</DropdownToggle>
+        <DropdownMenu>
+          <ButtonGroup vertical>
+            {Array.from(library.keys()).map(type => {
+              return (
+                <DropdownItem
+                  key={`add-${type}`}
+                  onClick={() => {
+                    this.toggle(), addElement(type)
+                  }}
+                >
+                  {capitalize(type)}
+                </DropdownItem>
+              )
+            })}
+          </ButtonGroup>
+        </DropdownMenu>
+      </ButtonDropdown>
+    )
+  }
 }
 
 // const configuration

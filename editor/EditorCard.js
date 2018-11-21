@@ -40,11 +40,19 @@ class ElementEditor extends Component {
 class EditorCard extends Component {
   constructor (props) {
     super(props)
+    this.state = {
+      isOpen: false
+    }
+    this.toggle = this.toggle.bind(this)
+  }
+  toggle () {
+    this.setState(prevstate => ({ isOpen: !prevstate.isOpen }))
   }
   shouldComponentUpdate (nextProps, nextState) {
-    return false
     // performance gets really bad when not doing this!
-    return JSON.stringify(this.props) != JSON.stringify(nextProps)
+    // return JSON.stringify(this.props) != JSON.stringify(nextProps)
+    if (nextState.isOpen !== this.state.isOpen) return true
+    return false
   }
   render () {
     const {
@@ -116,7 +124,11 @@ class EditorCard extends Component {
               ▽
             </Button>
           </ButtonGroup>
-          <CardTitle id={toggle} style={{ cursor: 'pointer' }}>
+          <CardTitle
+            id={toggle}
+            style={{ cursor: 'pointer' }}
+            onClick={this.toggle}
+          >
             {label || <em>_label</em>}
           </CardTitle>
           <CardSubtitle>
@@ -129,18 +141,16 @@ class EditorCard extends Component {
             </small>
           </CardSubtitle>
         </CardHeader>
-        <UncontrolledCollapse toggler={`#${toggle}`}>
-          <CardBody>
-            <ElementEditor
-              el={element}
-              library={library}
-              elements={elements}
-              initialModel={element}
-              setElement={setElementModel}
-              translator={this.props.translator}
-            />
-          </CardBody>
-        </UncontrolledCollapse>
+        <CardBody className={'collapse' + (this.state.isOpen ? ' show' : '')}>
+          <ElementEditor
+            el={element}
+            library={library}
+            elements={elements}
+            initialModel={element}
+            setElement={setElementModel}
+            translator={this.props.translator}
+          />
+        </CardBody>
       </Card>
     )
   }
