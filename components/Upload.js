@@ -31,12 +31,15 @@ const UploadComponent = props => {
           ['png', 'jpg', 'jpeg'],
           lowerCase(last(modelValue.split('.')))
         ) ? (
-          <div
+          <a
+            href={modelValue}
+            target={'_blank'}
             style={{
               margin: '1em auto',
               width: '180px',
               maxWidth: '100%',
               height: '120px',
+              display: 'block',
               background: `transparent url(${modelValue}) no-repeat center center`,
               backgroundSize: 'contain'
             }}
