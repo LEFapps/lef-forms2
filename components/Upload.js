@@ -16,7 +16,7 @@ const UploadComponent = props => {
       get(
         elementAttributes,
         'placeholders',
-        get(elementAttributes, 'placeholder', label)
+        get(elementAttributes, 'placeholder', '')
       ),
       translator
     ),
