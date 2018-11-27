@@ -40,7 +40,10 @@ const UploadComponent = props => {
               maxWidth: '100%',
               height: '120px',
               display: 'block',
-              background: `transparent url(${modelValue}) no-repeat center center`,
+              backgroundColor: 'transparent',
+              backgroundImage: `url(${modelValue})`,
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center center',
               backgroundSize: 'contain'
             }}
           />
