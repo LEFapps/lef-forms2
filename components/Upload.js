@@ -26,34 +26,34 @@ const UploadComponent = props => {
   }
   return (
     <div>
-      {modelValue ? (
-        includes(
-          ['png', 'jpg', 'jpeg'],
-          lowerCase(last(modelValue.split('.')))
-        ) ? (
-          <a
-            href={modelValue}
-            target={'_blank'}
-            style={{
-              margin: '1em auto',
-              width: '180px',
-              maxWidth: '100%',
-              height: '120px',
-              display: 'block',
-              backgroundColor: 'transparent',
-              backgroundImage: `url(${modelValue})`,
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center center',
-              backgroundSize: 'contain'
-            }}
-          />
-        ) : (
-          <a href={modelValue} target={'_blank'}>
-            {modelValue.split('/').pop()}
-          </a>
-        )
-      ) : null}
-      <ImgUpload {...bindUploadInput(name)} {...custom} />
+      {modelValue
+        ? includes(
+            ['png', 'jpg', 'jpeg'],
+            lowerCase(last(modelValue.split('.')))
+          )
+            ? <a
+              href={modelValue}
+              target={'_blank'}
+              style={{
+                margin: '1em auto',
+                width: '180px',
+                maxWidth: '100%',
+                height: '120px',
+                display: 'block',
+                backgroundColor: 'transparent',
+                backgroundImage: `url(${modelValue})`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center center',
+                backgroundSize: 'contain'
+              }}
+              />
+            : <a href={modelValue} target={'_blank'}>
+              {modelValue.split('/').pop()}
+            </a>
+        : null}
+      {elementAttributes.disabled
+        ? null
+        : <ImgUpload {...bindUploadInput(name)} {...custom} />}
     </div>
   )
 }
