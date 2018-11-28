@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Row } from 'reactstrap'
-import { map, isArray, get, set } from 'lodash'
+import { get, set } from 'lodash'
 
 const renderElements = (element, library, additionalProps, index) => {
   if (library.has(element.type)) {
@@ -11,7 +11,10 @@ const renderElements = (element, library, additionalProps, index) => {
     }
     return <Component key={key} element={element} {...additionalProps} />
   } else {
-    console.log(`Unknown element type: ${element.type}`)
+    console.log(
+      `Unknown element type: ${element.type}`,
+      get(element, 'name', index)
+    )
     return null
   }
 }
