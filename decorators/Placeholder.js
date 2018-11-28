@@ -1,13 +1,16 @@
 import React from 'react'
-import { includes, flip, union, upperCase, get } from 'lodash'
+import { includes, flip, union, upperCase, get, set } from 'lodash'
 import { translatorText } from '../translator'
 
 const PlaceholderDecorator = WrappedComponent => props => {
-  if (get(props, 'element.attributes.placeholders', '')) {
-    props.element.attributes.placeholder =
-      translatorText(props.element.attributes.placeholders, props.translator) ||
-      get(props, 'element.attributes.placeholder', '')
-  }
+  set(
+    props,
+    'element.attributes.placeholder',
+    translatorText(
+      get(props.element, 'attributes.placeholders'),
+      props.translator
+    ) || get(props, 'element.attributes.placeholder', '')
+  )
   return <WrappedComponent {...props} />
 }
 
