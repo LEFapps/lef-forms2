@@ -40,8 +40,8 @@ export default withTracker(({ element, translator }) => {
   }
   const documents = coll
     ? coll.collection
-        .find({}, size(collOptions) ? collOptions : undefined)
-        .fetch()
+      .find({}, size(collOptions) ? collOptions : undefined)
+      .fetch()
     : []
   return {
     loading: !handle.ready(),
@@ -51,8 +51,8 @@ export default withTracker(({ element, translator }) => {
           ? documents.map(d => ({
             _id: d._id,
             default: isArray(fields)
-                ? fields.map(f => get(d, f, '…')).join(' • ')
-                : d._id
+              ? fields.map(f => get(d, f, '…')).join(' • ')
+              : d._id
           }))
           : []
       ),

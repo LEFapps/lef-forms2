@@ -45,7 +45,7 @@ const config = ({ translator, model }) => {
                 }
               },
               attributes: {
-                rows: 8,
+                rows: 3,
                 placeholders: {
                   nl: 'Eén optie per lijn',
                   fr: 'One item per line',
