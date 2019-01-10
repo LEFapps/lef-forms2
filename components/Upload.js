@@ -9,7 +9,10 @@ const UploadComponent = props => {
 
   const modelValue = get(props.model, name, false)
   const bindUploadInput = name => ({
-    onSubmit: (awsUrl, thumbnails) => props.setProperty(name, awsUrl)
+    onSubmit: (awsUrl, thumbnails) => {
+      props.setProperty(name, awsUrl)
+      if (thumbnails) props.setProperty(`${name}Thumbnails`, thumbnails)
+    }
   })
   const custom = {
     label: translatorText(
@@ -22,16 +25,17 @@ const UploadComponent = props => {
     ),
     id: key,
     name,
-    fileUploader: !!get(elementAttributes, 'fileUploader')
+    fileUploader: !!get(elementAttributes, 'fileUploader'),
+    ...elementAttributes
   }
   return (
     <div>
-      {modelValue
-        ? includes(
-            ['png', 'jpg', 'jpeg'],
-            lowerCase(last(modelValue.split('.')))
-          )
-            ? <a
+      {modelValue ? (
+        includes(
+          ['png', 'jpg', 'jpeg'],
+          lowerCase(last(modelValue.split('.')))
+        ) ? (
+          <a
               href={modelValue}
               target={'_blank'}
               style={{
@@ -46,14 +50,16 @@ const UploadComponent = props => {
                 backgroundPosition: 'center center',
                 backgroundSize: 'contain'
               }}
-              />
-            : <a href={modelValue} target={'_blank'}>
+            />
+          ) : (
+            <a href={modelValue} target={'_blank'}>
               {modelValue.split('/').pop()}
             </a>
-        : null}
-      {elementAttributes.disabled
-        ? null
-        : <ImgUpload {...bindUploadInput(name)} {...custom} />}
+          )
+      ) : null}
+      {elementAttributes.disabled ? null : (
+        <ImgUpload {...bindUploadInput(name)} {...custom} />
+      )}
     </div>
   )
 }
