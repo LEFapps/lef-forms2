@@ -26,7 +26,8 @@ const UploadComponent = props => {
     id: key,
     name,
     fileUploader: !!get(elementAttributes, 'fileUploader'),
-    ...elementAttributes
+    ...elementAttributes,
+    invalid: get(propsAttributes, 'invalid')
   }
   return (
     <div>
