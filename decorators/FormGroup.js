@@ -5,12 +5,15 @@ import { translatorText } from '../translator'
 
 const FormGroupDecorator = WrappedComponent => props => {
   const { element, translator } = props
-  const { label = '' } = element || {}
+  const { label = '', required } = element || {}
+  const req = r =>
+    r ? <strong className={'text-primary'}>&nbsp;*</strong> : null
   if (element.custom) {
     return (
       <FormGroup>
         <Label>
-          {translatorText(element.label, translator) || element.type}
+          {translatorText(label, translator) || element.type}
+          {req(required)}
         </Label>
         <WrappedComponent {...props} />
       </FormGroup>
@@ -20,16 +23,18 @@ const FormGroupDecorator = WrappedComponent => props => {
       <FormGroup check>
         <Label check>
           <WrappedComponent {...props} />
-          {translatorText(element.label, translator) || element.type}
+          {translatorText(label, translator) || element.type}
+          {req(required)}
         </Label>
       </FormGroup>
     )
   } else {
     return (
       <FormGroup>
-        {props.element.label ? (
+        {label ? (
           <Label>
-            {translatorText(element.label, translator) || element.type}
+            {translatorText(label, translator) || element.type}
+            {req(required)}
           </Label>
         ) : null}
         <WrappedComponent {...props} />
