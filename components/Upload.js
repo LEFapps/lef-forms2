@@ -1,68 +1,97 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { translatorText } from '../translator'
-import ImgUpload from 'meteor/lef:imgupload'
 import { get, includes, last, lowerCase } from 'lodash'
 
-const UploadComponent = props => {
-  const { bindInput, element, translator, attributes: propsAttributes } = props
-  const { key, name, type, label, attributes: elementAttributes } = element
-
-  const modelValue = get(props.model, name, false)
-  const bindUploadInput = name => ({
-    onSubmit: (awsUrl, thumbnails) => {
-      props.setProperty(name, awsUrl)
-      if (thumbnails) props.setProperty(`${name}Thumbnails`, thumbnails)
+class UploadComponent extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      ImgUpload: false
     }
-  })
-  const custom = {
-    label: translatorText(
-      get(
-        elementAttributes,
-        'placeholders',
-        get(elementAttributes, 'placeholder', '')
-      ),
-      translator
-    ),
-    id: key,
-    name,
-    fileUploader: !!get(elementAttributes, 'fileUploader'),
-    ...elementAttributes,
-    invalid: get(propsAttributes, 'invalid')
+    this.loadUploader = this.loadUploader.bind(this)
+    this.loadUploader('meteor/lef:imgupload')
   }
-  return (
-    <div>
-      {modelValue ? (
-        includes(
-          ['png', 'jpg', 'jpeg'],
-          lowerCase(last(modelValue.split('.')))
-        ) ? (
-          <a
-              href={modelValue}
-              target={'_blank'}
-              style={{
-                margin: '1em auto',
-                width: '180px',
-                maxWidth: '100%',
-                height: '120px',
-                display: 'block',
-                backgroundColor: 'transparent',
-                backgroundImage: `url(${modelValue})`,
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center center',
-                backgroundSize: 'contain'
-              }}
-            />
-          ) : (
-            <a href={modelValue} target={'_blank'}>
-              {modelValue.split('/').pop()}
-            </a>
-          )
-      ) : null}
-      {elementAttributes.disabled ? null : (
-        <ImgUpload {...bindUploadInput(name)} {...custom} />
-      )}
-    </div>
-  )
+  loadUploader (uploader) {
+    import(uploader)
+      .then(module => {
+        this.setState({ ImgUpload: module.default })
+      })
+      .catch(e =>
+        console.warn(
+          'Uploader: ',
+          e,
+          'run "meteor add lef:imgupload" if this module is missing'
+        )
+      )
+  }
+  render () {
+    const { ImgUpload } = this.state
+    const {
+      bindInput,
+      element,
+      translator,
+      attributes: propsAttributes
+    } = this.props
+    const { key, name, type, label, attributes: elementAttributes } = element
+    const modelValue = get(this.props.model, name, false)
+    const bindUploadInput = name => ({
+      onSubmit: (awsUrl, thumbnails) => {
+        this.props.setProperty(name, awsUrl)
+        if (thumbnails) this.props.setProperty(`${name}Thumbnails`, thumbnails)
+      }
+    })
+    const custom = {
+      label: translatorText(
+        get(
+          elementAttributes,
+          'placeholders',
+          get(elementAttributes, 'placeholder', '')
+        ),
+        translator
+      ),
+      id: key,
+      name,
+      fileUploader: !!get(elementAttributes, 'fileUploader'),
+      ...elementAttributes,
+      invalid: get(propsAttributes, 'invalid')
+    }
+    return (
+      <div>
+        {modelValue ? (
+          includes(
+            ['png', 'jpg', 'jpeg'],
+            lowerCase(last(modelValue.split('.')))
+          ) ? (
+            <a
+                href={modelValue}
+                target={'_blank'}
+                style={{
+                  margin: '1em auto',
+                  width: '180px',
+                  maxWidth: '100%',
+                  height: '120px',
+                  display: 'block',
+                  backgroundColor: 'transparent',
+                  backgroundImage: `url(${modelValue})`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center center',
+                  backgroundSize: 'contain'
+                }}
+              />
+            ) : (
+              <a href={modelValue} target={'_blank'}>
+                {modelValue.split('/').pop()}
+              </a>
+            )
+        ) : null}
+        {elementAttributes.disabled ? null : ImgUpload ? (
+          <ImgUpload {...bindUploadInput(name)} {...custom} />
+        ) : (
+          'Initialising uploader ...'
+        )}
+      </div>
+    )
+  }
 }
 
 const config = ({ translator, model }) => [
