@@ -1,17 +1,48 @@
 import React from 'react'
-import { Text } from 'meteor/lef:utils'
 import { translatorText } from '../translator'
 
 import { upperCase } from 'lodash'
 
-const InfoBoxComponent = props => {
-  const { translator, bindInput, element, attributes: propsAttributes } = props
-  const { attributes: elementAttributes } = element
-  return (
-    <div {...elementAttributes} {...propsAttributes}>
-      <Text content={translatorText(element.label, translator)} />
-    </div>
-  )
+class InfoBoxComponent extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      Text: false
+    }
+    this.loadFormatter = this.loadFormatter.bind(this)
+    // TODO: change this to native 'mardown-it'
+    this.loadFormatter('meteor/lef:utils')
+  }
+  loadFormatter (formatter) {
+    import(formatter)
+      .then(({ Text }) => this.setState({ Text }))
+      .catch(e =>
+        console.warn(
+          'InfoBox: ',
+          e,
+          'run "meteor add lef:utils" if this module is missing'
+        )
+      )
+  }
+  render () {
+    const {
+      translator,
+      bindInput,
+      element,
+      attributes: propsAttributes
+    } = this.props
+    const { attributes: elementAttributes } = element
+    const { Text } = this.state
+    return (
+      <div {...elementAttributes} {...propsAttributes}>
+        {Text ? (
+          <Text content={translatorText(element.label, translator)} />
+        ) : (
+          translatorText(element.label, translator)
+        )}
+      </div>
+    )
+  }
 }
 
 const config = ({ translator, model }) => {
