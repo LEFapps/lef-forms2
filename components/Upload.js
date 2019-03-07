@@ -9,6 +9,8 @@ class UploadComponent extends React.Component {
       ImgUpload: false
     }
     this.loadUploader = this.loadUploader.bind(this)
+  }
+  componentWillMount () {
     this.loadUploader('meteor/lef:imgupload')
   }
   loadUploader (uploader) {

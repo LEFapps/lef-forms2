@@ -10,6 +10,8 @@ class InfoBoxComponent extends React.Component {
       Text: false
     }
     this.loadFormatter = this.loadFormatter.bind(this)
+  }
+  componentWillMount () {
     // TODO: change this to native 'mardown-it'
     this.loadFormatter('meteor/lef:utils')
   }
