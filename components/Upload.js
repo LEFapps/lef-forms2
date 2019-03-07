@@ -3,6 +3,7 @@ import { translatorText } from '../translator'
 import { get, includes, last, lowerCase } from 'lodash'
 
 class UploadComponent extends React.Component {
+  _isMounted = false
   constructor (props) {
     super(props)
     this.state = {
@@ -10,14 +11,18 @@ class UploadComponent extends React.Component {
     }
     this.loadUploader = this.loadUploader.bind(this)
   }
-  componentWillMount () {
+  componentDidMount () {
+    this._isMounted = true
     this.loadUploader('meteor/lef:imgupload')
+  }
+  componentWillUnmount () {
+    this._isMounted = false
   }
   loadUploader (uploader) {
     import(uploader)
-      .then(module => {
-        this.setState({ ImgUpload: module.default })
-      })
+      .then(module =>
+        this._isMounted ? this.setState({ ImgUpload: module.default }) : null
+      )
       .catch(e =>
         console.warn(
           'Uploader: ',

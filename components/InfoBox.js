@@ -4,6 +4,7 @@ import { translatorText } from '../translator'
 import { upperCase } from 'lodash'
 
 class InfoBoxComponent extends React.Component {
+  _isMounted = true
   constructor (props) {
     super(props)
     this.state = {
@@ -11,13 +12,17 @@ class InfoBoxComponent extends React.Component {
     }
     this.loadFormatter = this.loadFormatter.bind(this)
   }
-  componentWillMount () {
+  componentDidMount () {
+    this._isMounted = true
     // TODO: change this to native 'mardown-it'
     this.loadFormatter('meteor/lef:utils')
   }
+  componentWillUnmount () {
+    this._isMounted = false
+  }
   loadFormatter (formatter) {
     import(formatter)
-      .then(({ Text }) => this.setState({ Text }))
+      .then(({ Text }) => (this._isMounted ? this.setState({ Text }) : null))
       .catch(e =>
         console.warn(
           'InfoBox: ',
