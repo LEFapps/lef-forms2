@@ -1,9 +1,12 @@
 import React from 'react'
 import { isString, get, head, map } from 'lodash'
-import { Translate } from 'meteor/lef:translations'
 
 const translation = ({ translate }) => {
-  if (translate) return <Translate _id={translate} />
+  if (translate) {
+    import('meteor/lef:translations')
+      .then(({ Translate }) => <Translate _id={translate} />)
+      .catch(e => console.warn(e))
+  }
 }
 
 const translatorText = (text, translator, getDefault) => {
