@@ -1,6 +1,6 @@
 Package.describe({
   name: 'lef:forms2',
-  version: '1.2.18',
+  version: '1.3.0',
   summary: 'Easy, configuration based form composition',
   git: '',
   documentation: 'README.md'
@@ -12,9 +12,10 @@ Package.onUse(function (api) {
   Npm.depends({
     'react-dom': '16.5.1',
     'react-reformed': '2.0.0',
-    ajv: '6.5.3'
+    '@lefapps/forms': '1.3.0',
+    '@lefapps/translations': '3.0.0'
   })
-  api.mainModule('client.js', 'client')
+  api.mainModule('index.js', 'client')
 })
 
 Package.onTest(function (api) {
