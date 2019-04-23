@@ -19,7 +19,8 @@ import {
   DependentDecorator,
   ValidateDecorator,
   NameDecorator,
-  PlaceholderDecorator
+  PlaceholderDecorator,
+  Subform
 } from '@lefapps/forms'
 
 import SelectCollection, {
@@ -37,21 +38,25 @@ import Upload, {
 
 const Form = new EasyForm()
 
-Form.addComponent('select-collection', {
+const CheckboxMcCollectionComponent = {
   component: SelectCollection,
   config: scConfig,
   transform: scTransform
-})
-Form.addComponent('checkbox-mc-collection', {
+}
+const SelectCollectionComponent = {
   component: CheckboxMcCollection,
   config: cmcConfig,
   transform: cmcTransform
-})
-Form.addComponent('upload', {
+}
+const UploadComponent = {
   component: Upload,
   config: uConfig,
   transform: uTransform
-})
+}
+
+Form.addComponent('select-collection', CheckboxMcCollectionComponent)
+Form.addComponent('checkbox-mc-collection', SelectCollectionComponent)
+Form.addComponent('upload', UploadComponent)
 
 const Editor = Form.editor()
 
@@ -79,7 +84,14 @@ export {
   SelectCollection,
   InfoBox,
   Divider,
-  Upload
+  Upload,
+  Subform
+}
+
+export {
+  CheckboxMcCollectionComponent,
+  SelectCollectionComponent,
+  UploadComponent
 }
 
 export {
