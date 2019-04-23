@@ -15,6 +15,8 @@ The easiest way of creating forms is using the `EasyForm`.
 Let's assume the form is configured with a hardcoded list of elements:
 
 ```JSX
+import { EasyForm, Form, CheckboxMcCollectionComponent } from 'meteor/lef:forms2'
+
 const formElements = [
   {
     key: 'unique_key_foo', // forms built with FormEditor are automatically taken care of
@@ -37,7 +39,13 @@ const groupedFormEls = [
   {}, // elements as above
 ]
 
-const MyForm = new EasyForm().instance()
+// it is your responsibility to add meteor specific components (when using EasyForm constructor)
+const FormConfig = new EasyForm()
+// available components: CheckboxMcCollectionComponent, SelectCollectionComponent and UploadComponent
+FormConfig.addComponent('checkbox-mc-collection', CheckboxMcCollectionComponent)
+let MyForm = FormConfig.instance()
+// or use Form, comoponents are preinstalled, no constructor to be called
+MyForm = Form.instance()
 
 class Example extends Component {
   _onSubmit = (model) => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { translatorText } from '../translator'
+import { translatorText } from '@lefapps/forms'
 import { get, includes, last, lowerCase } from 'lodash'
 
 class UploadComponent extends React.Component {
