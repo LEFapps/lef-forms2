@@ -1,6 +1,9 @@
 import React from 'react'
 import { translatorText } from '@lefapps/forms'
-import { get, includes, last, lowerCase } from 'lodash'
+import { get, set, includes, last, lowerCase } from 'lodash'
+import { Button } from 'reactstrap'
+
+const removeText = 'Bestand verwijderen? | Supprimer? | Remove file?'
 
 class UploadComponent extends React.Component {
   _isMounted = false
@@ -41,6 +44,7 @@ class UploadComponent extends React.Component {
     } = this.props
     const { key, name, type, label, attributes: elementAttributes } = element
     const modelValue = get(this.props.model, name, false)
+    const { onChange } = bindInput(name)
     const bindUploadInput = name => ({
       onSubmit: (awsUrl, thumbnails) => {
         this.props.setProperty(name, awsUrl)
@@ -63,16 +67,18 @@ class UploadComponent extends React.Component {
       invalid: get(propsAttributes, 'invalid')
     }
     return (
-      <div>
+      <div style={{ position: 'relative' }}>
         {modelValue ? (
           includes(
             ['png', 'jpg', 'jpeg'],
             lowerCase(last(modelValue.split('.')))
           ) ? (
-            <a
+            <>
+              <a
                 href={modelValue}
                 target={'_blank'}
                 style={{
+                  position: 'relative',
                   margin: '1em auto',
                   width: '180px',
                   maxWidth: '100%',
@@ -85,10 +91,40 @@ class UploadComponent extends React.Component {
                   backgroundSize: 'contain'
                 }}
               />
+              <Button
+                style={{
+                  position: 'absolute',
+                  top: '0px',
+                  right: '0px'
+                }}
+                className={'imgUpload__removeButton'}
+                size={'sm'}
+                color={'danger'}
+                onClick={() =>
+                  confirm(removeText)
+                    ? onChange({ target: { name, value: undefined } })
+                    : null
+                }
+              >
+                &times;
+              </Button>
+            </>
             ) : (
+            <>
               <a href={modelValue} target={'_blank'}>
                 {modelValue.split('/').pop()}
-              </a>
+              </a>{' '}
+              <span
+                className={'imgUpload__removeButton text-danger'}
+                onClick={() =>
+                  confirm(removeText)
+                    ? onChange({ target: { name, value: undefined } })
+                    : null
+                }
+              >
+                &times;
+              </span>
+            </>
             )
         ) : null}
         {elementAttributes.disabled ? null : ImgUpload ? (
