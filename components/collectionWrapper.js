@@ -1,28 +1,25 @@
-import React from 'react'
 import { withTracker } from 'meteor/react-meteor-data'
 import {
   map,
-  forEach,
-  reduce,
-  upperCase,
   upperFirst,
-  kebabCase,
   get,
   find,
-  includes,
   stubTrue,
   cloneDeep,
   assign,
   size,
-  isString,
-  isArray,
-  isPlainObject
+  isArray
 } from 'lodash'
 
 const collections = () => window.myCollections || []
 
 export default withTracker(({ element, translator }) => {
-  const { subscription, fields, defaultOptions } = element
+  const {
+    subscription,
+    subscriptionQuery = {},
+    fields,
+    defaultOptions
+  } = element
   const coll = find(collections(), c => c.subscription == subscription)
   if (subscription && !coll) {
     console.warn(
@@ -30,7 +27,7 @@ export default withTracker(({ element, translator }) => {
     )
   }
   const handle = coll
-    ? Meteor.subscribe(coll.subscription)
+    ? Meteor.subscribe(coll.subscription, subscriptionQuery)
     : { ready: stubTrue }
   const collOptions = {}
   if (isArray(fields) && fields.length) {
