@@ -401,12 +401,20 @@ const element = {
     "en" : "Organization"
   },
   "type" : "select-collection",
-  "subscription" : "userOrg", // subscription name
-  "fields" : [ // fields to show as option
-      "name", // if populated, this field is used for sorting
+  // subscription name
+  "subscription" : "userOrg",
+  // optional subscription query
+  "subscriptionQuery": {
+    orgId: id
+  },
+  // fields to show as option
+  // if populated, first field is used for sorting
+  "fields" : [
+      "name", 
       "address.city"
   ],
-  "defaultOptions" : [ // values for extra options
+  // values for extra options
+  "defaultOptions" : [
     "_id" : "~new-organization",
     "nl" : "Nieuwe organisatie",
     "en" : "New organization"
