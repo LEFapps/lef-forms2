@@ -394,31 +394,31 @@ You can create a select with options gathered from a collection.
 
 ```JS
 const element = {
-  "key" : "selectCollection.orgs",
-  "name" : "organization",
-  "label" : {
-    "nl" : "Organisatie",
-    "en" : "Organization"
+  key: "selectCollection.orgs",
+  name: "organization",
+  label: {
+    nl: "Organisatie",
+    en: "Organization"
   },
-  "type" : "select-collection",
+  type: "select-collection",
   // subscription name
-  "subscription" : "userOrg",
+  subscription: "userOrg",
   // optional subscription query
-  "subscriptionQuery": {
+  subscriptionQuery: {
     orgId: id
   },
   // fields to show as option
   // if populated, first field is used for sorting
-  "fields" : [
+  fields: [
       "name", 
       "address.city"
   ],
   // values for extra options
-  "defaultOptions" : [
-    "_id" : "~new-organization",
-    "nl" : "Nieuwe organisatie",
-    "en" : "New organization"
-  ]
+  defaultOptions : [{
+    _id: "~new-organization",
+    nl: "Nieuwe organisatie",
+    en: "New organization"
+  }]
 }
 ```
 
