@@ -147,20 +147,40 @@ Blueprint of an element:
 
 You (probably) only need to make one `EasyForm` instance per "type" of form in your application. You can simply reuse it as a component throughout your application.
 
+### Translated Forms
+
+Inject a translator object in a Form (also works for the editor, see below).
+
+```JSX
+import React from 'react'
+import { EasyForm } from 'meteor/lef:forms2'
+import { withTranslator, Translate } from 'meteor/lef:translations'
+
+const Form = new EasyForm().instance()
+
+const withFormTranslator = WrappedForm => ({ translator, ...props }) => (
+  <WrappedForm
+    {...props}
+    translator={Object.assign(translator, { component: Translate })}
+  />
+)
+
+export default withTranslator(withFormTranslator(Form))
+```
+
 ## Modifying libraries
 
 If you wish to modify the standard component and decorator libraries, you can do things like this:
 
 ```JSX
-import { withTranslator } from 'meteor/lef:translations'
-
 const MyFormConfig = new EasyForm()
+
 MyFormConfig.addComponent(name1,component)
 MyFormConfig.removeComponent(name2)
 MyFormConfig.addDecorator(name3,decorator)
 MyFormConfig.removeDecorator(name4)
+
 const MyForm = MyFormConfig.instance()
-const MyTranslatedForm = withTranslator(MyForm)
 ```
 
 or
@@ -168,7 +188,7 @@ or
 ```JSX
 const MyDecorators = DefaultDecorators.subset(["formgroup","layout"])
 const MyComponents = DefaultComponents.subset(["textarea","checkbox"])
-const MyForm = new EasyForm({library:MyComponents,decorators:MyDecorators}).instance()
+const MyForm = new EasyForm({ library: MyComponents, decorators: MyDecorators }).instance()
 ```
 
 ## Editing forms
@@ -176,10 +196,7 @@ const MyForm = new EasyForm({library:MyComponents,decorators:MyDecorators}).inst
 It's extremely easy to get a form editor for the example form above:
 
 ```JSX
-import { withTranslator } from 'meteor/lef:translations'
-
 const MyFormEditor = new EasyForm().editor()
-const MyTranslatedFormEditor = withTranslator(MyFormEditor)
 
 class Example extends Component {
   _onSubmit = (formElements) => {
@@ -189,7 +206,7 @@ class Example extends Component {
   }
   render() {
     return (
-      <MyTranslatedFormEditor
+      <MyFormEditor
         initialModel={formElements}
         onSubmit={this._onSubmit}
       >
@@ -410,7 +427,7 @@ const element = {
   // fields to show as option
   // if populated, first field is used for sorting
   fields: [
-      "name", 
+      "name",
       "address.city"
   ],
   // values for extra options
