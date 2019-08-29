@@ -1,6 +1,6 @@
 Package.describe({
   name: 'lef:forms2',
-  version: '1.4.9',
+  version: '1.4.10',
   summary: 'Easy, configuration based form composition',
   git: '',
   documentation: 'README.md'
@@ -9,12 +9,6 @@ Package.describe({
 Package.onUse(function (api) {
   api.versionsFrom('1.7.0.4')
   api.use(['ecmascript'])
-  Npm.depends({
-    'react-dom': '16.5.1',
-    'react-reformed': '2.0.0',
-    '@lefapps/forms': '1.4.9'
-    // '@lefapps/translations': '3.0.0'
-  })
   api.mainModule('index.js', 'client')
 })
 
