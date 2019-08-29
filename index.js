@@ -20,7 +20,8 @@ import {
   ValidateDecorator,
   NameDecorator,
   PlaceholderDecorator,
-  Subform
+  Subform,
+  Editor
 } from '@lefapps/forms'
 
 import SelectCollection, {
@@ -58,11 +59,9 @@ Form.addComponent('select-collection', CheckboxMcCollectionComponent)
 Form.addComponent('checkbox-mc-collection', SelectCollectionComponent)
 Form.addComponent('upload', UploadComponent)
 
-const Editor = Form.editor()
+const FormEdit = Form.editor()
 
-// console.log(ComponentConfiguration)
-
-export { Form, Editor }
+export { Form, FormEdit }
 
 export {
   EasyForm,
@@ -85,7 +84,8 @@ export {
   InfoBox,
   Divider,
   Upload,
-  Subform
+  Subform,
+  Editor
 }
 
 export {
