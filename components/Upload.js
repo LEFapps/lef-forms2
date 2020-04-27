@@ -1,6 +1,6 @@
 import React from 'react'
 import { translatorText } from '@lefapps/forms'
-import { get, set, includes, last, lowerCase } from 'lodash'
+import { get, includes, last, lowerCase, stubFalse } from 'lodash'
 import { Button } from 'reactstrap'
 
 const removeText = 'Bestand verwijderen? | Supprimer? | Remove file?'
@@ -109,7 +109,7 @@ class UploadComponent extends React.Component {
                 &times;
               </Button>
             </>
-            ) : (
+          ) : (
             <>
               <a href={modelValue} target={'_blank'}>
                 {modelValue.split('/').pop()}
@@ -125,7 +125,7 @@ class UploadComponent extends React.Component {
                 &times;
               </span>
             </>
-            )
+          )
         ) : null}
         {elementAttributes.disabled ? null : ImgUpload ? (
           <ImgUpload {...bindUploadInput(name)} {...custom} />
@@ -187,5 +187,7 @@ const config = ({ translator, model }) => [
 
 const transform = (element, { translator }, saving) => element
 
+const filter = stubFalse
+
 export default UploadComponent
-export { config, transform }
+export { config, transform, filter }
