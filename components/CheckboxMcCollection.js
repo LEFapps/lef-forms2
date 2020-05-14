@@ -1,5 +1,4 @@
 import React from 'react'
-import { withTracker } from 'meteor/react-meteor-data'
 import { CheckboxMC, transformOptions } from '@lefapps/forms'
 import collectionWrapper, {
   collectionHeader,
