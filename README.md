@@ -456,20 +456,15 @@ if (Meteor.isServer) global.myCollections = collections
 When using an `imgUpload`, you can specify an array of sizes to which the images need to be resized. E.g.: `[256, 512, 1024]`. The images are resized on the client and uploaded together with the original file. The thumbnails are saved as follows:
 
 ```JS
-const document = {
-  image: 'url-to-original',
-  imageThumbnails: [ // same property name as original + 'Thumbnails'
-    {
-      size: 256,
-      url: 'url-to-thumb-256x256'
-    }
-    {
-      size: 512,
-      url: 'url-to-thumb-512x512'
-    }
-    {
-      size: 1024,
-      url: 'url-to-thumb-1024x1024'
-    }
-  ]
+const uploadFormElementConfig = {
+  name: 'rectangle',
+  label: 'Rechthoek (250 x 300 px)',
+  layout: { col: { md: 12 } },
+  type: 'upload',
+  attributes: {
+    uploader: 'ads',
+    sizes: [{ label: 'rectangle', width: 250, height: 300, crop: true }],
+    baseUrl: Meteor.settings.public.imageServer
+  }
 }
+```

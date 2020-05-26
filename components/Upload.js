@@ -2,6 +2,7 @@ import React from 'react'
 import { translatorText } from '@lefapps/forms'
 import { get, includes, last, lowerCase, stubFalse } from 'lodash'
 import { Button } from 'reactstrap'
+import { Preview } from '@lefapps/uploader'
 
 const removeText = 'Bestand verwijderen? | Supprimer? | Remove file?'
 
@@ -10,7 +11,8 @@ class UploadComponent extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      ImgUpload: false
+      ImgUpload: false,
+      doc: null
     }
     this.loadUploader = this.loadUploader.bind(this)
   }
@@ -43,11 +45,13 @@ class UploadComponent extends React.Component {
       attributes: propsAttributes
     } = this.props
     const { key, name, type, label, attributes: elementAttributes } = element
+    const { baseUrl, uploader } = elementAttributes
     const modelValue = get(this.props.model, name, false)
-    const { onChange } = bindInput(name)
+    const { value } = bindInput(name)
     const bindUploadInput = name => ({
-      onSubmit: (awsUrl, thumbnails) => {
-        this.props.setProperty(name, awsUrl)
+      onSubmit: (doc, thumbnails) => {
+        this.setState({ doc })
+        this.props.setProperty(name, baseUrl ? doc.name : doc.url)
         if (thumbnails) this.props.setProperty(`${name}Thumbnails`, thumbnails)
       }
     })
@@ -66,69 +70,23 @@ class UploadComponent extends React.Component {
       ...elementAttributes,
       invalid: get(propsAttributes, 'invalid')
     }
+    const originalPrefix =
+      Meteor.settings.public.uploads[uploader || 'images'].defaultPrefix
     return (
       <div style={{ position: 'relative' }}>
-        {modelValue ? (
-          includes(
-            ['png', 'jpg', 'jpeg'],
-            lowerCase(last(modelValue.split('.')))
-          ) ? (
-            <>
-              <a
-                href={modelValue}
-                target={'_blank'}
-                style={{
-                  position: 'relative',
-                  margin: '1em auto',
-                  width: '180px',
-                  maxWidth: '100%',
-                  height: '120px',
-                  display: 'block',
-                  backgroundColor: 'transparent',
-                  backgroundImage: `url(${modelValue})`,
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center center',
-                  backgroundSize: 'contain'
-                }}
-              />
-              <Button
-                style={{
-                  position: 'absolute',
-                  top: '0px',
-                  right: '0px'
-                }}
-                className={'imgUpload__removeButton'}
-                size={'sm'}
-                color={'danger'}
-                onClick={() =>
-                  confirm(removeText)
-                    ? onChange({ target: { name, value: undefined } })
-                    : null
-                }
-              >
-                &times;
-              </Button>
-            </>
-          ) : (
-            <>
-              <a href={modelValue} target={'_blank'}>
-                {modelValue.split('/').pop()}
-              </a>{' '}
-              <span
-                className={'imgUpload__removeButton text-danger'}
-                onClick={() =>
-                  confirm(removeText)
-                    ? onChange({ target: { name, value: undefined } })
-                    : null
-                }
-              >
-                &times;
-              </span>
-            </>
-          )
-        ) : null}
         {elementAttributes.disabled ? null : ImgUpload ? (
-          <ImgUpload {...bindUploadInput(name)} {...custom} />
+          <ImgUpload {...bindUploadInput(name)} {...custom} _getMeta>
+            {value ? (
+              <Preview
+                url={
+                  baseUrl
+                    ? `${baseUrl}/${uploader}/${originalPrefix}${value}`
+                    : value
+                }
+                name={value}
+              />
+            ) : null}
+          </ImgUpload>
         ) : (
           'Initialising uploader ...'
         )}

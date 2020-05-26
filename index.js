@@ -24,6 +24,7 @@ import {
   Editor
 } from '@lefapps/forms'
 
+// Components
 import SelectCollection, {
   config as scConfig,
   transform as scTransform,
@@ -39,6 +40,9 @@ import Upload, {
   transform as uTransform,
   filter as uFilter
 } from './components/Upload'
+
+// Decorators
+import MarkdownUploadDecorator from './decorators/MarkdownUpload'
 
 const Form = new EasyForm()
 
@@ -64,6 +68,8 @@ const UploadComponent = {
 Form.addComponent('select-collection', CheckboxMcCollectionComponent)
 Form.addComponent('checkbox-mc-collection', SelectCollectionComponent)
 Form.addComponent('upload', UploadComponent)
+
+Form.addDecorator('markdownUpload', MarkdownUploadDecorator)
 
 const FormEdit = Form.editor()
 
@@ -107,5 +113,6 @@ export {
   ValidateDecorator,
   DependentDecorator,
   NameDecorator,
-  PlaceholderDecorator
+  PlaceholderDecorator,
+  MarkdownUploadDecorator
 }
