@@ -27,15 +27,18 @@ import {
 // Components
 import SelectCollection, {
   config as scConfig,
-  transform as scTransform
+  transform as scTransform,
+  filter as scFilter
 } from './components/SelectCollection'
 import CheckboxMcCollection, {
   config as cmcConfig,
-  transform as cmcTransform
+  transform as cmcTransform,
+  filter as cmcFilter
 } from './components/CheckboxMcCollection'
 import Upload, {
   config as uConfig,
-  transform as uTransform
+  transform as uTransform,
+  filter as uFilter
 } from './components/Upload'
 
 // Decorators
@@ -46,17 +49,20 @@ const Form = new EasyForm()
 const CheckboxMcCollectionComponent = {
   component: SelectCollection,
   config: scConfig,
-  transform: scTransform
+  transform: scTransform,
+  filter: scFilter
 }
 const SelectCollectionComponent = {
   component: CheckboxMcCollection,
   config: cmcConfig,
-  transform: cmcTransform
+  transform: cmcTransform,
+  filter: cmcFilter
 }
 const UploadComponent = {
   component: Upload,
   config: uConfig,
-  transform: uTransform
+  transform: uTransform,
+  filter: uFilter
 }
 
 Form.addComponent('select-collection', CheckboxMcCollectionComponent)
