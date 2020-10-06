@@ -188,6 +188,13 @@ const config = ({ translator, model }) => [
 const transform = (element, { translator }, saving) => element
 
 const filter = stubFalse
+const hideable = true
 
-export default UploadComponent
-export { config, transform, filter }
+export { UploadComponent as component, config, transform, filter, hideable }
+export default {
+  component: UploadComponent,
+  config,
+  transform,
+  filter,
+  hideable
+}

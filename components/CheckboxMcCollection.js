@@ -133,6 +133,13 @@ const transform = (element, { translator }, saving) => {
 }
 
 const filter = stubFalse
+const hideable = true
 
-export default CheckboxMcCollection
-export { config, transform, filter }
+export { config, transform, filter, hideable }
+export default {
+  component: CheckboxMcCollection,
+  config,
+  transform,
+  filter,
+  hideable
+}

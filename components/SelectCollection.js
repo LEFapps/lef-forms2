@@ -132,6 +132,13 @@ const transform = (element, { translator }, saving) => {
 }
 
 const filter = stubFalse
+const hideable = true
 
-export default SelectCollection
-export { config, transform, filter }
+export { SelectCollection as component, config, transform, filter, hideable }
+export default {
+  component: SelectCollection,
+  config,
+  transform,
+  filter,
+  hideable
+}
