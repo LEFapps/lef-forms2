@@ -60,7 +60,7 @@ class UploadComponent extends React.Component {
         ),
         translator
       ),
-      id: key,
+      id: key || name,
       name,
       fileUploader: !!get(elementAttributes, 'fileUploader'),
       ...elementAttributes,
