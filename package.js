@@ -17,3 +17,7 @@ Package.onTest(function (api) {
   api.use('tinytest')
   api.use('lef-forms2')
 })
+
+Npm.depends({
+    '@lefapps/forms': '1.7.9'
+})
