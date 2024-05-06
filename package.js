@@ -1,6 +1,6 @@
 Package.describe({
   name: 'lef:forms2',
-  version: '1.6.0-untested',
+  version: '1.6.1-untested',
   summary: 'Easy, configuration based form composition',
   git: '',
   documentation: 'README.md'
@@ -19,5 +19,5 @@ Package.onTest(function (api) {
 })
 
 Npm.depends({
-    '@lefapps/forms': '1.7.9'
+  '@lefapps/forms': '1.8.17'
 })
