@@ -405,9 +405,9 @@ const getLabel = ({ translator }) => translatorText(label, translator, false) ||
 
 ## Special Components
 
-### select-collection
+### select-collection and checkbox-mc-collection
 
-You can create a select with options gathered from a collection.
+You can create a select with options gathered from a collection. `select-collection` will create a dropdown (in other words, only one option can be selected), `checkbox-mc-collection` will create a list of checkboxes (multiple choices possible).
 
 ```JS
 const element = {
