@@ -46,8 +46,8 @@ import MarkdownUploadDecorator from './decorators/MarkdownUpload'
 
 const Form = new EasyForm()
 
-Form.addComponent('select-collection', CheckboxMcCollection)
-Form.addComponent('checkbox-mc-collection', SelectCollection)
+Form.addComponent('select-collection', SelectCollection)
+Form.addComponent('checkbox-mc-collection', CheckboxMcCollection)
 Form.addComponent('upload', Upload)
 
 Form.addDecorator('markdownUpload', MarkdownUploadDecorator)
