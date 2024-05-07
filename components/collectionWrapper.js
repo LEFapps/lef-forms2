@@ -22,8 +22,8 @@ export default withTracker(({ element, translator }) => {
   } = element
   const coll = find(collections(), c => c.subscription == subscription)
   if (subscription && !coll) {
-    console.warn(
-      `“${subscription}” not found. Make sure your collections are declared globally. See documentation for more information.`
+    console.error(
+      `“${subscription}” not found in window.myCollections. See documentation for more information.`
     )
   }
   const handle = coll
