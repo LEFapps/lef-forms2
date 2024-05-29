@@ -19,5 +19,5 @@ Package.onTest(function (api) {
 })
 
 Npm.depends({
-  '@lefapps/forms': '1.8.17'
+  '@lefapps/forms': '1.8.18'
 })
